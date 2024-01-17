@@ -1,13 +1,14 @@
 ArrayList<Clue> clues = new ArrayList<Clue>();
 int numClues = 0;
 
+boolean invalid = false;//invalid reset to false every time a new guess is made
+//check if invalid after every clue process, if so, break
+
 // Blank template class which will be used to store specific functions in a general object
 class Function {
   void call() {}
 }
-
-//Function linkedFunction = null;  // Initialize that general object
-
+// binary search, insertion sort for category/option suggestions
 void setup() {
   
 }
