@@ -1,8 +1,12 @@
 void affirmative(int[] subjA, int[] subjB) {
-  if (positionKnown(subjA))
+  if (positionKnown(subjA)) {
     setOption(subjB[0], __[subjA[0]][subjA[1]], subjB[1]);//indices
-  else if (positionKnown(subjB))
+    //todo: hide clue
+  }
+  else if (positionKnown(subjB)) {
     setOption(subjA[0], __[subjB[0]][subjB[1]], subjA[1]);//indices
+    //todo: hide clue
+  }
     
   else {
     int pairsFound = 0;
@@ -13,9 +17,9 @@ void affirmative(int[] subjA, int[] subjB) {
         pairsFound += 1;
         pairCol = c;
       }
-      else if (__[subjA[0]][c][subjA[1]] == 0 && __[subjB[0]][c][subjB[1]] == 1)//bools
+      else if (__[subjA[0]][c][subjA[1]] == 0)//bools
         removeOption(subjB[0], c, subjB[1]);
-      else if (__[subjA[0]][c][subjA[1]] == 1 && __[subjB[0]][c][subjB[1]] == 0)//bools
+      else if (__[subjB[0]][c][subjB[1]] == 0)//bools
         removeOption(subjA[0], c, subjA[1]);
         
       
@@ -24,6 +28,7 @@ void affirmative(int[] subjA, int[] subjB) {
     if (pairsFound == 1) {
       setOption(subjA[0], pairCol, subjA[1]);
       setOption(subjB[0], pairCol, subjB[1]);
+      //todo: hide clue
     }
   }
 }
@@ -34,10 +39,14 @@ void negative(int[] subjA, int[] subjB) {
     return;
   }
   
-  if (positionKnown(subjA))
+  if (positionKnown(subjA)) {
     removeOption(subjB[0], __[subjA[0]][subjA[1]], subjB[1]);//indices
-  else if (positionKnown(subjB))
+    //todo: hide clue
+  }
+  else if (positionKnown(subjB)) {
     removeOption(subjA[0], __[subjB[0]][subjB[1]], subjA[1]);//indices
+    //todo: hide clue
+  }
 }
 
 void atPosition(int[] subjA, int[] subjB, int type) {
@@ -48,15 +57,32 @@ void atPosition(int[] subjA, int[] subjB, int type) {
   else  // at position
     setOption(subjA[0], subjB[0], subjA[1]);//subjB[0] will be column index instead of what it usually is
   
+  //todo: hide clue
 }
 
-void atEitherEnd(int[] subjA, int[] subjB, int type) {
+void atEitherEnd(int[] subj, int type) {
   if (type == 0) {  // not at either end
-    
+    removeOption(subj[0], 0, subj[1]);
+    removeOption(subj[0], num columns - 1, subj[1]);
+    //todo: hide clue
   }
   
   else {  // at either end
+    if (__[subj[0]][0][subj[1]] == 0) {//bools
+      setOption(subj[0], num columns - 1, subj[1]);
+      //todo: hide clue
+    }
     
+    else if (__[subj[0]][num columns - 1][subj[1]] == 0) {//bools
+      setOption(subj[0], 0, subj[1]);
+      //todo: hide clue
+    }
+    
+    else {
+      for (int c = 1; c < num columns - 1; c++)
+        removeOption(subj[0], c, subj[1]);
+      
+    }
   }
 }
 

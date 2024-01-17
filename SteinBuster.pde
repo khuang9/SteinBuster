@@ -28,9 +28,9 @@ void processClue(Clue c) {
   else if (ct.equals("not at position"))
     atPosition(subjA, subjB, 0);
   else if (ct.equals("at either end"))
-    atEitherEnd(subjA, subjB, 1);
+    atEitherEnd(subjA, 1);
   else if (ct.equals("not at either end"))
-    atEitherEnd(subjA, subjB, 0);
+    atEitherEnd(subjA, 0);
   else if (ct.equals("next to"))
     nextTo(subjA, subjB, 1);
   else if (ct.equals("not next to"))

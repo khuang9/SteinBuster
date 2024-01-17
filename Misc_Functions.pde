@@ -1,8 +1,11 @@
 void removeOption(int row, int col, int i) {
+  if (__[row][col][i] == 0)//bools
+    return;
+    
   __[row][col][i] = 0;  // bools
-  __[row][i] -= 1; // num possible positions
+  __[row][col] -= 1; // num possible positions
   
-  if (__[row][i] <= 0)
+  if (__[row][col] <= 0)//num possible positions
     invalid = true;
 }
 
@@ -14,7 +17,7 @@ void setOption(int row, int col, int i) {
     
   __[row][col] = new int[however many options];  //bools
   __[row][col][i] = 1;  //bools
-  __[row][i] = 1;  //num possible positions
+  __[row][col] = 1;  //num possible positions
   __[row][i] = col;//indices (all unset options are -1)
   
   for (int c = 0; c < num columns; c++) {
