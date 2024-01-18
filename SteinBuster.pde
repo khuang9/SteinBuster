@@ -5,6 +5,8 @@ boolean invalid = false;//invalid reset to false every time a new guess is made
 // todo: check if invalid after every clue process, if so, break
 //todo: store suggestions in text file
 
+boolean solved = false;
+
 // Blank template class which will be used to store specific functions in a general object
 class Function {
   void call() {}
@@ -14,6 +16,25 @@ void setup() {
   
 }
 
+void solve() {
+  if (sum of everything in array == n*n) {
+    solved = true;
+    return;
+  }
+  
+  while (num nothing amounted clues != clues.size()) {
+    for (Clue cl : clues) {
+      processClue(cl);
+      //todo: add way to check if nothing amounted from clue
+      
+    }
+  }
+  
+  save prev state; //(if invalid, return to prev state)
+  find square with least num possible options;
+  make random guess;
+  solve();
+}
 
 void processClue(Clue c) {
   String ct = c.clueType;
