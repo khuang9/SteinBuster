@@ -198,7 +198,7 @@ void leftOf(int[] subjA, int[] subjB, int type) {
       //hide clue
     }
     
-    else if (positionKnown(subjB)) {
+    else {
       setOption(subjA[0], __[subjB[0]][subjB[1]] - 1, subjA[1]);//indices
       //hide clue
     }
@@ -218,11 +218,54 @@ void leftOf(int[] subjA, int[] subjB, int type) {
 }
 //todo: precalculate indices and other aspects of subjA and B and store in variables
 void rightOf(int[] subjA, int[] subjB, int type) {
-  if (type == 0) {  // immediately right of
+  removeOption(subjA[0], 0, subjA[1]);
+  removeOption(subjB[0], num columns - 1, subjB[1]);
+  
+  if (!positionKnown(subjA) && !positionKnown(subjB)) {
+    if (type == 0) {
+      for (int c = 0; c < num columns - 1; c++) {
+        if (__[subjA[0]][c+1][subjA[1]] == 0)//bools
+          removeOption(subjB[0], c, subjB[1]);
+      }
+      
+      for (int c = 1; c < num columns; c++) {
+        if (__[subjB[0]][c-1][subjB[1]] == 0)//bools
+          removeOption(subjA[0], c, subjA[1]);
+      }
+    }
     
+    return;
+  }
+  
+  else if (positionKnown(subjA) && positionKnown(subjB)) {
+    if (__[subjA[0]][subjA[1]] <= __[subjB[0]][subjB[1]])//indices
+      invalid = true;
+    else
+      hide clue;
+    return;
+  }
+  
+  if (type == 0) {  // immediately right of
+    if (positionKnown(subjA)) {
+      setOption(subjB[0], __[subjA[0]][subjA[1]] - 1, subjB[1]);//indices
+      //hide clue
+    }
+    
+    else if (positionKnown(subjB)) {
+      setOption(subjA[0], __[subjB[0]][subjB[1]] + 1, subjA[1]);//indices
+      //hide clue
+    }
   }
   
   else {  // somewhere right of
+    if (positionKnown(subjA)) {
+      for (int c = 0; c < __[subjB[0]][subjB[1]] + 1; c++)//indices
+        removeOption(subjA[0], c, subjA[1]);
+    }
     
+    else {
+      for (int c = __[subjA[0]][subjA[1]]; c < num columns; c++)//indices
+        removeOption(subjB[0], c, subjB[1]);
+    }
   }
 }
