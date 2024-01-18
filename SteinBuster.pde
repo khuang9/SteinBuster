@@ -2,13 +2,14 @@ ArrayList<Clue> clues = new ArrayList<Clue>();
 int numClues = 0;
 
 boolean invalid = false;//invalid reset to false every time a new guess is made
-//check if invalid after every clue process, if so, break
+// todo: check if invalid after every clue process, if so, break
+//todo: store suggestions in text file
 
 // Blank template class which will be used to store specific functions in a general object
 class Function {
   void call() {}
 }
-// binary search, insertion sort for category/option suggestions
+// todo: binary search, insertion sort for category/option suggestions
 void setup() {
   
 }

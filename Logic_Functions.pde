@@ -87,12 +87,67 @@ void atEitherEnd(int[] subj, int type) {
 }
 
 void nextTo(int[] subjA, int[] subjB, int type) {
-  if (type == 0) {  // not next to
+  if (!positionKnown(subjA) && !positionKnown(subjB)) {
+    if (type == 1) {
+      for (int c = 0; c < num columns; c++) {
+        if (c == 0 && __[subjB[0]][1][subjB[1]] == 0 ||
+            c == num columns - 1 && __[subjB[0]][c-1][subjB[1]] == 0
+            )//bools
+          removeOption(subjA[0], c, subjA[1]);
+        //else if (c == num columns - 1 && __[subjB[0]][c-1][subjB[1]] == 0)//bools
+        //  removeOption(subjA[0], c, subjB[0]);
+        else if (0 < c && c < num columns - 1) {
+          if (__[subjB[0]][c-1][subjB[1]] == 0 && __[subjB[0]][c+1][subjB[1]] == 0)//bools
+            removeOption(subjA[0], c, subjA[1]);
+        }
+      }
+    }
     
+    return;
+  }
+  
+  else if (positionKnown(subjA) && positionKnown(subjB)) {
+    if (abs(__[subjA[0]][subjA[1]] - __[subjB[0]][subjB[1]]) != 1)
+      invalid = true;
+    return;
+  }
+    
+  int[] subjKnown;
+  int[] subjUnknown;
+  
+  if (positionKnown(subjA)) {
+    subjKnown = subjA;
+    subjUnknown = subjB;
+  } else {
+    subjKnown = subjB;
+    subjUnknown = subjA;
+  }
+  
+  int col = __[subjKnown[0]][subjKnown[1]];//indices
+  if (type == 0) {  // not next to
+    if (col == 0)
+      removeOption(subjUnknown[0], 1, subjUnknown[1]);
+    else if (col == num columns)
+      removeOption(subjUnknown[0], num columns - 1, subjUnknown[1]);
+    else {
+      removeOption(subjUnknown[0], col - 1, subjUnknown[1]);
+      removeOption(subjUnknown[0], col + 1, subjUnknown[1]);
+    }
+      
   }
   
   else {  // next to
-    
+    int knownInd = __[subjKnown[0]][subjKnown[1]];//indices
+    if (knownInd == 0)//indices
+      setOption(subjUnknown[0], 1, subjUnknown[1]);
+    else if (knownInd == num columns - 1)//indices
+      setOption(subjUnknown[0], num columns - 2, subjUnknown[1]);
+    else {
+      for (int c = 0; c < num columns; c++) {
+        if (c < knownInd - 1 || knownInd + 1 < c)
+          removeOption(subjUnknown[0], c, subjUnknown[1]);
+      }
+    }
   }
 }
 
