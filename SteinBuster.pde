@@ -1,4 +1,4 @@
-int n = 5;//number of rows, number of columns, and number of options
+int n = 4;//number of rows, number of columns, and number of options
 int[][][] optionsPossible = new int[n][n][n];//bools
 int[][][] prevOptionsPossible = new int[n][n][n];
 int[][] subjectColumns = new int[n][n];//indices
@@ -53,6 +53,18 @@ void setup() {
   
   saveState();
   
+  clues.add(new Clue(new int[]{3, 3}, "at position", new int[]{2, -1}));
+  clues.add(new Clue(new int[]{2, 0}, "at position", new int[]{3, -1}));
+  clues.add(new Clue(new int[]{0, 1}, "at position", new int[]{2, -1}));
+  clues.add(new Clue(new int[]{1, 2}, "next to", new int[]{0, 3}));
+  clues.add(new Clue(new int[]{1, 2}, "immediately left of", new int[]{0, 1}));
+  clues.add(new Clue(new int[]{0, 0}, "affirmative", new int[]{3, 2}));
+  clues.add(new Clue(new int[]{2, 2}, "affirmative", new int[]{3, 3}));
+  clues.add(new Clue(new int[]{3, 0}, "somewhere right of", new int[]{0, 1}));
+  clues.add(new Clue(new int[]{1, 2}, "affirmative", new int[]{3, 1}));
+  clues.add(new Clue(new int[]{1, 1}, "at position", new int[]{2, -1}));
+  clues.add(new Clue(new int[]{1, 1}, "immediately left of", new int[]{0, 0}));
+  clues.add(new Clue(new int[]{3, 2}, "next to", new int[]{2, 1}));
   numClues = clues.size();
 }
 
