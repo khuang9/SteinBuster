@@ -1,5 +1,5 @@
 void removeOption(int row, int col, int i) {
-  println(clue.clueType);
+  //println(clue.clueType);
   if (optionsPossible[row][col][i] == 0)//bools
     return;
     
@@ -81,8 +81,8 @@ int[] leastOptionsSquareIndices() {
   int minRow = n;
   int minCol = n;
   
-  for (int row = 0; row < gridNumPossibilities.length; row++) {
-    for (int col = 0; col < gridNumPossibilities.length; col++) {
+  for (int row = 0; row < n; row++) {
+    for (int col = 0; col < n; col++) {
       int numOptions = gridNumPossibilities[row][col];
       
       if (numOptions == 2)
@@ -99,6 +99,14 @@ int[] leastOptionsSquareIndices() {
   return new int[]{minRow, minCol};
 }
 
+int indexInArray(int[] arr, int el) {
+  for (int i = 0; i < arr.length; i++) {
+    if (arr[i] == el)
+      return i;
+  }
+  
+  return -1;
+}
 
 void saveState() {
   copyArray(optionsPossible, prevOptionsPossible);

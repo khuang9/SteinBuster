@@ -13,7 +13,7 @@ int numClues = 0;
 int numCluesFinished = 0;
 int prevNumCluesFinished = 0;
 
-String[][] subjects = new String[n][n];
+String[][] subjects = new String[n][n+1];
 
 boolean invalid = false;//invalid reset to false every time a new guess is made
 // todo: check if invalid after every clue process, if so, break
@@ -29,16 +29,16 @@ class Function {
 // search to find place in list based on letters typed and add new suggestion into right place
 // sort relevant suggestions by times used
 void setup() {
-  for (int i = 0; i < optionsPossible.length; i++) {
-    for (int j = 0; j < optionsPossible[0].length; j++) {
-      for (int k = 0; k < optionsPossible[0][0].length; k++) {
+  for (int i = 0; i < n; i++) {
+    for (int j = 0; j < n; j++) {
+      for (int k = 0; k < n; k++) {
         optionsPossible[i][j][k] = 1;
       }
     }
   }
   
-  for (int i = 0; i < subjectColumns.length; i++) {
-    for (int j = 0; j < subjectColumns[0].length; j++) {
+  for (int i = 0; i < n; i++) {
+    for (int j = 0; j < n; j++) {
       subjectColumns[i][j] = -1;
     }
   }
@@ -49,8 +49,8 @@ void setup() {
   //  }
   //}
   
-  for (int i = 0; i < gridNumPossibilities.length; i++) {
-    for (int j = 0; j < gridNumPossibilities[0].length; j++) {
+  for (int i = 0; i < n; i++) {
+    for (int j = 0; j < n; j++) {
       gridNumPossibilities[i][j] = n;
     }
   }
@@ -69,18 +69,27 @@ void setup() {
   clues.add(new Clue(new int[]{3, 2}, "next to", new int[]{2, 1}));
   //numClues = clues.size();
   
-  subjects[0] = new String[]{"blue", "pink", "white", "yellow"};
-  subjects[1] = new String[]{"Eric", "Oscar", "Peter", "Richard"};
-  subjects[2] = new String[]{"Aguero", "Cruyff", "Pele", "Ronaldinho"};
-  subjects[3] = new String[]{"cousin", "friend", "nephew", "uncle"};
+  subjects[0] = new String[]{"blue", "pink", "white", "yellow", "Hat:"};
+  subjects[1] = new String[]{"Eric", "Oscar", "Peter", "Richard", "Name:"};
+  subjects[2] = new String[]{"Aguero", "Cruyff", "Pele", "Ronaldinho", "Player:"};
+  subjects[3] = new String[]{"cousin", "friend", "nephew", "uncle", "Companion"};
   
   saveState();
   
   solve();
   
   if (solved) {
-    
+    for (int i = 0; i < n; i++) {
+      print(subjects[i][n] + "\t\t");
+      for(int j = 0; j < n; j++) {
+        print(subjects[i][indexInArray(optionsPossible[i][j], 1)] + "\t\t");
+      }
+      print("\n");
+    }
   }
+  
+  else
+    println("Puzzle is unsolvable");
 }
 
 void solve() {
@@ -98,7 +107,7 @@ void solve() {
       }
     }
     
-    if (!cluesUsed)
+    if (!cluesUsed) //<>//
       break;
   }
   
@@ -107,7 +116,7 @@ void solve() {
     return;
   }
   
-  if (arrayTotal(gridNumPossibilities) < n*n) { //<>//
+  if (arrayTotal(gridNumPossibilities) < n*n) {
     revertState();  // Revert to prev state
     return;
   }
@@ -120,7 +129,7 @@ void solve() {
   
   int row = leastOptionsIndices[0];
   int col = leastOptionsIndices[1];
-  for (int guessIndex = 0; guessIndex < optionsPossible[row][col].length; guessIndex++) {
+  for (int guessIndex = 0; guessIndex < n; guessIndex++) {
     if (optionsPossible[row][col][guessIndex] == 1) {
       setOption(row, col, guessIndex);
       solve();
