@@ -80,9 +80,20 @@ void solve() {
   }
   
   saveState(); //(if invalid, can return to prev state)
-  find square with least num possible options;
-  make random guess for that square;
-  solve();
+  int[] leastOptionsIndices = leastOptionsSquareIndices();
+  //find square with least num possible options >= 2;
+  //let's say found at numGridPossibilities[row][col]
+  
+  int row = leastOptionsIndices[0];
+  int col = leastOptionsIndices[1];
+  for (int guessIndex = 0; guessIndex < optionsPossible[row][col].length; guessIndex++) {
+    if (optionsPossible[row][col][guessIndex] == 1 {
+      setOption(row, col, guessIndex);
+      solve();
+      if (solved)
+        return;
+    }
+  }
 }
 
 void processClue(Clue cl) {

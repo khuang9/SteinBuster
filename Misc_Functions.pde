@@ -65,6 +65,30 @@ void copyArray(int[][] copyFrom, int[][] copyTo) {
 }
 
 
+int[] leastOptionsSquareIndices() {
+  int minOptions = n;
+  int minRow = n;
+  int minCol = n;
+  
+  for (int row = 0; row < gridNumPossibilities.length; row++) {
+    for (int col = 0; col < gridNumPossibilities.length; col++) {
+      int numOptions = gridNumPossibilities[row][col];
+      
+      if (numOptions == 2)
+        return new int[]{row, col};
+        
+      else if (numOptions < minOptions && numOptions > 2) {
+        minOptions = numOptions;
+        minRow = row;
+        minCol = col;
+      }
+    }
+  }
+  
+  return new int[]{minRow, minCol};
+}
+
+
 void saveState() {
   copyArray(optionsPossible, prevOptionsPossible);
   copyArray(subjectColumns, prevSubjectColumns);
