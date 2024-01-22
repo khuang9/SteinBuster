@@ -1,7 +1,10 @@
 void removeOption(int row, int col, int i) {
+  println(clue.clueType);
   if (optionsPossible[row][col][i] == 0)//bools
     return;
     
+  cluesUsed = true;
+  
   optionsPossible[row][col][i] = 0;  // bools
   gridNumPossibilities[row][col] -= 1; // num possible options
   
@@ -16,7 +19,7 @@ void setOption(int row, int col, int i) {
   }
     
   optionsPossible[row][col] = new int[n];  //bools, set to new array of zeroes with same length as before (however many options there are)
-  //optionsPossible[row][col][i] = 1;  //bools//don't need i think
+  optionsPossible[row][col][i] = 1;  //bools
   gridNumPossibilities[row][col] = 1;  //num possible options
   subjectColumns[row][i] = col;//indices (all unset options are -1)
   
@@ -64,9 +67,17 @@ void copyArray(int[][] copyFrom, int[][] copyTo) {
   }
 }
 
+void copyArray(ArrayList<Clue> copyFrom, ArrayList<Clue> copyTo) {
+  copyTo = new ArrayList<Clue>();
+  
+  for (int i = 0; i < copyFrom.size(); i++) {
+    copyTo.add(copyFrom.get(i));
+  }
+}
+
 
 int[] leastOptionsSquareIndices() {
-  int minOptions = n;
+  int minOptions = n; //<>//
   int minRow = n;
   int minCol = n;
   
@@ -93,10 +104,14 @@ void saveState() {
   copyArray(optionsPossible, prevOptionsPossible);
   copyArray(subjectColumns, prevSubjectColumns);
   copyArray(gridNumPossibilities, prevGridNumPossibilities);
+  copyArray(clues, prevClues);
+  prevNumCluesFinished = numCluesFinished;
 }
 
 void revertState() {
   copyArray(prevOptionsPossible, optionsPossible);
   copyArray(prevSubjectColumns, subjectColumns);
   copyArray(prevGridNumPossibilities, gridNumPossibilities);
+  copyArray(prevClues, clues);
+  numCluesFinished = prevNumCluesFinished;
 }
