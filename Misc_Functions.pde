@@ -45,3 +45,21 @@ int arrayTotal(int[][] arr) {
   
   return sum;
 }
+
+void copyArray(int[][][] copyFrom, int[][][] copyTo) {
+  for (int i = 0; i < copyFrom.length; i++) {
+    for (int j = 0; j < copyFrom[0].length; j++) {
+      for (int k = 0; k < copyFrom[0][0].length; k++) {
+        copyTo[i][j][k] = copyFrom[i][j][k];
+      }
+    }
+  }
+}
+
+void copyArray(int[][] copyFrom, int[][] copyTo) {
+  for (int i = 0; i < copyFrom.length; i++) {
+    for (int j = 0; j < copyFrom[0].length; j++) {
+      copyTo[i][j] = copyFrom[i][j];
+    }
+  }
+}

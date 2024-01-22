@@ -1,8 +1,11 @@
 int n = 5;//number of rows, number of columns, and number of options
 int[][][] optionsPossible = new int[n][n][n];//bools
+int[][][] prevOptionsPossible = new int[n][n][n];
 int[][] subjectColumns = new int[n][n];//indices
-int[][] subjectNumPossibilities = new int[n][n];//num poss for subj
+int[][] prevSubjectColumns = new int[n][n];
+//int[][] subjectNumPossibilities = new int[n][n];//num poss for subj
 int[][] gridNumPossibilities = new int[n][n];//num poss for grid
+int[][] prevGridNumPossibilities = new int[n][n];
 ArrayList<Clue> clues = new ArrayList<Clue>();
 int numClues = 0;
 
