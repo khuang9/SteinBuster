@@ -1,8 +1,8 @@
 void removeOption(int row, int col, int i) {
-  if (__[row][col][i] == 0)//bools
+  if (optionsPossible[row][col][i] == 0)//bools
     return;
     
-  __[row][col][i] = 0;  // bools
+  optionsPossible[row][col][i] = 0;  // bools
   __[row][col] -= 1; // num possible positions
   
   if (__[row][col] <= 0)//num possible positions
@@ -10,17 +10,17 @@ void removeOption(int row, int col, int i) {
 }
 
 void setOption(int row, int col, int i) {
-  if (__[row][col][i] == 0) {
+  if (optionsPossible[row][col][i] == 0) {
     invalid = true;
     return;
   }
     
-  __[row][col] = new int[however many options];  //bools
-  __[row][col][i] = 1;  //bools
+  optionsPossible[row][col] = new int[n];  //bools, set to new array of zeroes with same length as before (however many options there are)
+  //optionsPossible[row][col][i] = 1;  //bools
   __[row][col] = 1;  //num possible positions
-  __[row][i] = col;//indices (all unset options are -1)
+  subjectColumns[row][i] = col;//indices (all unset options are -1)
   
-  for (int c = 0; c < num columns; c++) {
+  for (int c = 0; c < n; c++) {  // Iterate through all columns
     if (c != col)
       removeOption(row, c, i);
   }
@@ -29,7 +29,7 @@ void setOption(int row, int col, int i) {
 }
 
 boolean positionKnown(int[] subj) {
-  if (__[subj[0]][subj[1]] != -1)//indices
+  if (subjectColumns[subj[0]][subj[1]] != -1)//indices
     return true;
   
   return false;
