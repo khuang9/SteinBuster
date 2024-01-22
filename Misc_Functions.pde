@@ -63,3 +63,16 @@ void copyArray(int[][] copyFrom, int[][] copyTo) {
     }
   }
 }
+
+
+void saveState() {
+  copyArray(optionsPossible, prevOptionsPossible);
+  copyArray(subjectColumns, prevSubjectColumns);
+  copyArray(gridNumPossibilities, prevGridNumPossibilities);
+}
+
+void revertState() {
+  copyArray(prevOptionsPossible, optionsPossible);
+  copyArray(prevSubjectColumns, subjectColumns);
+  copyArray(prevGridNumPossibilities, gridNumPossibilities);
+}

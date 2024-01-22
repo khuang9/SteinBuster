@@ -37,17 +37,19 @@ void setup() {
     }
   }
   
-  for (int i = 0; i < subjectNumPossibilities.length; i++) {
-    for (int j = 0; j < subjectNumPossibilities[0].length; j++) {
-      subjectNumPossibilities[i][j] = n;
-    }
-  }
+  //for (int i = 0; i < subjectNumPossibilities.length; i++) {
+  //  for (int j = 0; j < subjectNumPossibilities[0].length; j++) {
+  //    subjectNumPossibilities[i][j] = n;
+  //  }
+  //}
   
   for (int i = 0; i < gridNumPossibilities.length; i++) {
     for (int j = 0; j < gridNumPossibilities[0].length; j++) {
       gridNumPossibilities[i][j] = n;
     }
   }
+  
+  saveState();
 }
 
 void solve() {
@@ -57,7 +59,7 @@ void solve() {
   }
   
   if (arrayTotal(gridNumPossibilities) < n*n) {
-    revert to prev state
+    revertState();  // Revert to prev state
     return;
   }
   
@@ -66,47 +68,47 @@ void solve() {
       processClue(cl);
       //todo: add way to check if nothing amounted from clue
       if (invalid) {
-        revert to prev state
+        revertState();  // Revert to prev state
         return;
       }
     }
   }
   
-  save prev state; //(if invalid, return to prev state)
+  saveState(); //(if invalid, can return to prev state)
   find square with least num possible options;
-  make random guess;
+  make random guess for that square;
   solve();
 }
 
-void processClue(Clue c) {
-  String ct = c.clueType;
-  int[] subjA = c.subjectA;
-  int[] subjB = c.subjectB;
+void processClue(Clue cl) {
+  String ct = cl.clueType;
+  int[] subjA = cl.subjectA;
+  int[] subjB = cl.subjectB;
   
   if (ct.equals("affirmative"))
-    affirmative(subjA, subjB);
+    affirmative(cl, subjA, subjB);
   else if (ct.equals("negative"))
-    negative(subjA, subjB);
+    negative(cl, subjA, subjB);
   else if (ct.equals("at position"))
-    atPosition(subjA, subjB, 1);
+    atPosition(cl, subjA, subjB, 1);
   else if (ct.equals("not at position"))
-    atPosition(subjA, subjB, 0);
+    atPosition(cl, subjA, subjB, 0);
   else if (ct.equals("at either end"))
-    atEitherEnd(subjA, 1);
+    atEitherEnd(cl, subjA, 1);
   else if (ct.equals("not at either end"))
-    atEitherEnd(subjA, 0);
+    atEitherEnd(cl, subjA, 0);
   else if (ct.equals("next to"))
-    nextTo(subjA, subjB, 1);
+    nextTo(cl, subjA, subjB, 1);
   else if (ct.equals("not next to"))
-    nextTo(subjA, subjB, 0);
+    nextTo(cl, subjA, subjB, 0);
   else if (ct.equals("immediately left of"))
-    leftOf(subjA, subjB, 0);
+    leftOf(cl, subjA, subjB, 0);
   else if (ct.equals("somewhere left of"))
-    leftOf(subjA, subjB, 1);
+    leftOf(cl, subjA, subjB, 1);
   else if (ct.equals("immediately right of"))
-    rightOf(subjA, subjB, 0);
+    rightOf(cl, subjA, subjB, 0);
   else if (ct.equals("somewhere right of"))
-    rightOf(subjA, subjB, 1);
+    rightOf(cl, subjA, subjB, 1);
     
   //c.linkedFunction.call();
 }
