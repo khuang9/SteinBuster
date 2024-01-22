@@ -48,12 +48,12 @@ void setup() {
 }
 
 void solve() {
-  if (sum of everything in array of num possibilr for grid == n*n) {
+  if (arrayTotal(gridNumPossibilities) == n*n) {//sum of everything in array of num possibilr for grid
     solved = true;
     return;
   }
   
-  if (sum of evrytin < n*n) {
+  if (arrayTotal(gridNumPossibilities) < n*n) {
     revert to prev state
     return;
   }
