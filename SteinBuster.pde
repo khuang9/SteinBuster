@@ -9,6 +9,8 @@ int[][] prevGridNumPossibilities = new int[n][n];
 ArrayList<Clue> clues = new ArrayList<Clue>();
 int numClues = 0;
 
+int numCluesFinished = 0;
+
 boolean invalid = false;//invalid reset to false every time a new guess is made
 // todo: check if invalid after every clue process, if so, break
 //todo: store suggestions in text file
@@ -50,6 +52,8 @@ void setup() {
   }
   
   saveState();
+  
+  numClues = clues.size();
 }
 
 void solve() {
@@ -63,8 +67,9 @@ void solve() {
     return;
   }
   
-  while (num of 'nothing amounted' clues != clues.size()) {
-    for (Clue cl : clues) {
+  while (numCluesUsed > 0) {
+    for (int i = numCluesFinished; i < numClues; i++) {
+      Clue cl = clues.get(i - numCluesFinished);
       processClue(cl);
       //todo: add way to check if nothing amounted from clue
       if (invalid) {

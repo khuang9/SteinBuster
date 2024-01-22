@@ -20,14 +20,16 @@ class Clue {
   
   // METHODS
   void hide() {
-    Clue c = clues.get(numClues - 1);
+    numCluesFinished += 1;
+    
+    Clue c = clues.get(numClues - 1 - numCluesFinished);
     
     // Replace clue to hide with last clue in list
     c.index = this.index;
     clues.set(this.index, c);
     
     // Remove last clue in list
-    clues.remove(numClues - 1);
+    //clues.remove(numClues - 1);
   }
   
   //void linkFunction() {
