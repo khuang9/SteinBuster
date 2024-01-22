@@ -17,10 +17,12 @@ class Function {
   void call() {}
 }
 // todo: binary search, insertion sort for category/option suggestions
+// search to find place in list based on letters typed and add new suggestion into right place
+// sort relevant suggestions by times used
 void setup() {
   for (int i = 0; i < optionsPossible.length; i++) {
-    for (int j = 0; j < optionsPossible[0].length, j++) {
-      for (int k = 0; k < optionsPossible[0][0].length, k++) {
+    for (int j = 0; j < optionsPossible[0].length; j++) {
+      for (int k = 0; k < optionsPossible[0][0].length; k++) {
         optionsPossible[i][j][k] = 1;
       }
     }
@@ -39,7 +41,7 @@ void setup() {
   }
   
   for (int i = 0; i < gridNumPossibilities.length; i++) {
-    for (int j = 0; j < gridNumPossibilities[0].length, j++) {
+    for (int j = 0; j < gridNumPossibilities[0].length; j++) {
       gridNumPossibilities[i][j] = n;
     }
   }
@@ -56,7 +58,7 @@ void solve() {
     return;
   }
   
-  while (num nothing amounted clues != clues.size()) {
+  while (num of 'nothing amounted' clues != clues.size()) {
     for (Clue cl : clues) {
       processClue(cl);
       //todo: add way to check if nothing amounted from clue
