@@ -1,9 +1,14 @@
+//todo: if clueused, check if anything can be confirmed (if any only has one poss left, use subjectnumpossibilities)
+//check after: negative, not at position, not at either end, not next to, any left of, any right of
+//or just check when stuck
+
 int n = 4;//number of rows, number of columns, and number of options
 int[][][] optionsPossible = new int[n][n][n];//bools
 int[][][] prevOptionsPossible = new int[n][n][n];
 int[][] subjectColumns = new int[n][n];//indices
 int[][] prevSubjectColumns = new int[n][n];
-//int[][] subjectNumPossibilities = new int[n][n];//num poss for subj
+int[][] subjectNumPossibilities = new int[n][n];//num poss for subj
+int[][] prevSubjectNumPossibilities = new int[n][n];
 int[][] gridNumPossibilities = new int[n][n];//num poss for grid
 int[][] prevGridNumPossibilities = new int[n][n];
 ArrayList<Clue> clues = new ArrayList<Clue>();
@@ -43,11 +48,11 @@ void setup() {
     }
   }
   
-  //for (int i = 0; i < subjectNumPossibilities.length; i++) {
-  //  for (int j = 0; j < subjectNumPossibilities[0].length; j++) {
-  //    subjectNumPossibilities[i][j] = n;
-  //  }
-  //}
+  for (int i = 0; i < n; i++) {
+    for (int j = 0; j < n; j++) {
+      subjectNumPossibilities[i][j] = n;
+    }
+  }
   
   for (int i = 0; i < n; i++) {
     for (int j = 0; j < n; j++) {
@@ -107,7 +112,7 @@ void solve() {
       }
     }
     
-    if (!cluesUsed) //<>//
+    if (!cluesUsed || stuck()) //<>//
       break;
   }
   

@@ -6,9 +6,10 @@ void removeOption(int row, int col, int i) {
   cluesUsed = true;
   
   optionsPossible[row][col][i] = 0;  // bools
-  gridNumPossibilities[row][col] -= 1; // num possible options
+  gridNumPossibilities[row][col] -= 1; // num possible options by grid
+  subjectNumPossibilities[row][i] -= 1;  // num possible options by subject
   
-  if (gridNumPossibilities[row][col] <= 0)//num possible options
+  if (gridNumPossibilities[row][col] <= 0 || subjectNumPossibilities[row][i] <= 0)//num possible options
     invalid = true;
 }
 
@@ -20,7 +21,8 @@ void setOption(int row, int col, int i) {
     
   optionsPossible[row][col] = new int[n];  //bools, set to new array of zeroes with same length as before (however many options there are)
   optionsPossible[row][col][i] = 1;  //bools
-  gridNumPossibilities[row][col] = 1;  //num possible options
+  gridNumPossibilities[row][col] = 1;  //num possible options by grid
+  //subjectNumPossibilities[row][i] = 1;  //num possible options by subject//prob don't need (-1 done in remove)
   subjectColumns[row][i] = col;//indices (all unset options are -1)
   
   for (int c = 0; c < n; c++) {  // Iterate through all columns
@@ -112,6 +114,7 @@ void saveState() {
   copyArray(optionsPossible, prevOptionsPossible);
   copyArray(subjectColumns, prevSubjectColumns);
   copyArray(gridNumPossibilities, prevGridNumPossibilities);
+  copyArray(subjectNumPossibilities, prevSubjectNumPossibilities);
   copyArray(clues, prevClues);
   prevNumCluesFinished = numCluesFinished;
 }
@@ -120,6 +123,7 @@ void revertState() {
   copyArray(prevOptionsPossible, optionsPossible);
   copyArray(prevSubjectColumns, subjectColumns);
   copyArray(prevGridNumPossibilities, gridNumPossibilities);
+  copyArray(prevSubjectNumPossibilities, subjectNumPossibilities);
   copyArray(prevClues, clues);
   numCluesFinished = prevNumCluesFinished;
 }

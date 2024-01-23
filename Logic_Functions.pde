@@ -328,3 +328,34 @@ void rightOf(Clue cl, int[] subjA, int[] subjB, int type) {
     //numCluesUsed += 1;
   }
 }
+
+
+boolean stuck() {
+  for (int row = 0; row < n; row++) {
+    for (int col = 0; col < n; col++) {
+      if (gridNumPossibilities[row][col] == 1) {
+        int subjIndex = indexInArray(optionsPossible[row][col], 1);
+        
+        if (subjectColumns[row][subjIndex] == -1) {
+          subjectColumns[row][subjIndex] = col;
+          return false;
+        }
+      }
+        
+        
+    }
+    
+    for (int subjIndex = 0; subjIndex < n; subjIndex++) {
+      if (subjectNumPossibilities[row][subjIndex] == 1) {
+        for (int col = 0; col < n; col++) {
+          if (optionsPossible[row][col][subjIndex] == 1) {
+            setOption(row, col, subjIndex);
+            return false;
+          }
+        }
+      }
+    }
+  }
+  
+  return true;
+}
