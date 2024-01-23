@@ -346,7 +346,7 @@ boolean stuck() {
     }
     
     for (int subjIndex = 0; subjIndex < n; subjIndex++) {
-      if (subjectNumPossibilities[row][subjIndex] == 1) {
+      if (subjectNumPossibilities[row][subjIndex] == 1 && subjectColumns[row][subjIndex] == -1) {
         for (int col = 0; col < n; col++) {
           if (optionsPossible[row][col][subjIndex] == 1) {
             setOption(row, col, subjIndex);

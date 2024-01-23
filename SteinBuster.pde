@@ -77,7 +77,7 @@ void setup() {
   subjects[0] = new String[]{"blue", "pink", "white", "yellow", "Hat:"};
   subjects[1] = new String[]{"Eric", "Oscar", "Peter", "Richard", "Name:"};
   subjects[2] = new String[]{"Aguero", "Cruyff", "Pele", "Ronaldinho", "Player:"};
-  subjects[3] = new String[]{"cousin", "friend", "nephew", "uncle", "Companion"};
+  subjects[3] = new String[]{"cousin", "friend", "nephew", "uncle", "Companion:"};
   
   saveState();
   
@@ -91,6 +91,8 @@ void setup() {
       }
       print("\n");
     }
+    
+    println("Checks done:", checks);
   }
   
   else
@@ -112,7 +114,9 @@ void solve() {
       }
     }
     
-    if (!cluesUsed || stuck()) //<>//
+    while (!stuck()) {}
+    
+    if (!cluesUsed) //<>//
       break;
   }
   
@@ -146,9 +150,11 @@ void solve() {
     }
   }
 }
-Clue clue;
+//Clue clue;
+int checks = 0;
 void processClue(Clue cl) {
-  clue = cl;
+  //clue = cl;
+  checks += 1;
   String ct = cl.clueType;
   int[] subjA = cl.subjectA;
   int[] subjB = cl.subjectB;
