@@ -79,7 +79,7 @@ void copyArray(ArrayList<Clue> copyFrom, ArrayList<Clue> copyTo) {
 
 
 int[] leastOptionsSquareIndices() {
-  int minOptions = n; //<>//
+  int minOptions = n + 1; //<>//
   int minRow = n;
   int minCol = n;
   

@@ -33,7 +33,26 @@ class Function {
 // todo: binary search, insertion sort for category/option suggestions
 // search to find place in list based on letters typed and add new suggestion into right place
 // sort relevant suggestions by times used
+//todo: if time, animate step by step process (animation speed slider), would have to show ones eliminated (in top corner, first letter with a red X if eliminated)
 void setup() {
+  size(800, 600);
+  background(0);
+  
+  int gridX1 = 100;
+  int gridY1 = 50;
+  int gridX2 = 750;
+  int gridY2 = 550;
+  
+  int gridWidth = gridX2 - gridX1;
+  int gridHeight = gridY2 - gridY1;
+  int cellWidth = gridWidth/n;
+  int cellHeight = gridHeight/n;
+  
+  rect(gridX1, gridY1, gridWidth, gridHeight);
+  
+  
+  
+  
   for (int i = 0; i < n; i++) {
     for (int j = 0; j < n; j++) {
       for (int k = 0; k < n; k++) {
@@ -79,15 +98,40 @@ void setup() {
   subjects[2] = new String[]{"Aguero", "Cruyff", "Pele", "Ronaldinho", "Player:"};
   subjects[3] = new String[]{"cousin", "friend", "nephew", "uncle", "Companion:"};
   
+  textAlign(RIGHT, CENTER);
+  textSize(20);
+  fill(255);
+  
+  for (int i = 0; i < n; i++) {
+    int x = gridX1 + i*cellWidth;
+    int y = gridY1 + i*cellHeight;
+    
+    line(gridX1, y, gridX2, y);
+    line(x, gridY1, x, gridY2);
+    
+    textSize(min(20, 20 * (gridX1 - 10)/textWidth(subjects[i][n])));
+    text(subjects[i][n], gridX1 - 5, y + cellHeight/2);
+    
+    textSize(20);
+  }
+  
   saveState();
   
   solve();
   
   if (solved) {
+    textAlign(CENTER, CENTER);
+    fill(0);
+    
     for (int i = 0; i < n; i++) {
       print(subjects[i][n] + "\t\t");
       for(int j = 0; j < n; j++) {
-        print(subjects[i][indexInArray(optionsPossible[i][j], 1)] + "\t\t");
+        String subject = subjects[i][indexInArray(optionsPossible[i][j], 1)];
+        textSize(min(20, 20 * (cellWidth - 10)/textWidth(subject)));
+        text(subject, gridX1 + (j + 0.5) * cellWidth, gridY1 + (i + 0.5) * cellHeight);
+        print(subject + "\t\t");
+        
+        textSize(20);
       }
       print("\n");
     }
@@ -98,7 +142,7 @@ void setup() {
   else
     println("Puzzle is unsolvable");
 }
-
+//todo: if time, add feature for figuring out how many solutions there are
 void solve() {
   while (true) {
     //numCluesUsed = 0;
@@ -116,7 +160,7 @@ void solve() {
     
     while (!stuck()) {}
     
-    if (!cluesUsed) //<>//
+    if (!cluesUsed)
       break;
   }
   
@@ -132,7 +176,7 @@ void solve() {
   
   
   saveState(); //(if invalid, can return to prev state)
-  int[] leastOptionsIndices = leastOptionsSquareIndices();  // no errors will occur here due to previous two if statements (pigeon hole) 
+  int[] leastOptionsIndices = leastOptionsSquareIndices();  // no errors will occur here due to previous two if statements (pigeon hole)  //<>//
   //find square with least num possible options >= 2;
   //let's say found at numGridPossibilities[row][col]
   
