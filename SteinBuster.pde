@@ -1,3 +1,5 @@
+import g4p_controls.*;
+
 //todo: if clueused, check if anything can be confirmed (if any only has one poss left, use subjectnumpossibilities)
 //check after: negative, not at position, not at either end, not next to, any left of, any right of
 //or just check when stuck
@@ -35,6 +37,14 @@ class Function {
 // sort relevant suggestions by times used
 //todo: if time, animate step by step process (animation speed slider), would have to show ones eliminated (in top corner, first letter with a red X if eliminated)
 void setup() {
+  createGUI();
+  
+  String[] filler = {"filler", "filler", "filler"};
+  selectCategory.setItems(filler, 0);
+  selectSubjectA.setItems(filler, 0);
+  selectSubjectB.setItems(filler, 0);
+  selectClueType.setItems(filler, 0);
+  
   size(800, 600);
   background(0);
   
@@ -142,6 +152,11 @@ void setup() {
   else
     println("Puzzle is unsolvable");
 }
+//todo: bind enter key to enter button event//nvm, unless can figure out how to know which button should be bound to enter key (know which textbox selected)
+void draw() {
+  
+}
+
 //todo: if time, add feature for figuring out how many solutions there are
 void solve() {
   while (true) {
