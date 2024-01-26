@@ -17,6 +17,8 @@ ArrayList<Clue> clues = new ArrayList<Clue>();
 ArrayList<Clue> prevClues = new ArrayList<Clue>();
 int numClues = 0;
 
+boolean positionMatters = true;
+
 int numCluesFinished = 0;
 int prevNumCluesFinished = 0;
 
@@ -58,6 +60,7 @@ void setup() {
   int cellWidth = gridWidth/n;
   int cellHeight = gridHeight/n;
   
+  strokeWeight(3);
   rect(gridX1, gridY1, gridWidth, gridHeight);
   
   
@@ -89,8 +92,8 @@ void setup() {
     }
   }
   
-  clues.add(new Clue(new int[]{3, 3}, "at position", new int[]{2, -1}));
-  clues.add(new Clue(new int[]{2, 0}, "at position", new int[]{3, -1}));
+  clues.add(new Clue(new int[]{3, 3}, "at position", new int[]{2, -1}));//todo: gives index error when position doesn't matter
+  clues.add(new Clue(new int[]{2, 0}, "at position", new int[]{3, -1}));//todo: gives index error when position doesn't matter
   clues.add(new Clue(new int[]{0, 1}, "at position", new int[]{2, -1}));
   clues.add(new Clue(new int[]{1, 2}, "next to", new int[]{0, 3}));
   clues.add(new Clue(new int[]{1, 2}, "immediately left of", new int[]{0, 1}));
@@ -116,7 +119,9 @@ void setup() {
     int x = gridX1 + i*cellWidth;
     int y = gridY1 + i*cellHeight;
     
+    strokeWeight(1);
     line(gridX1, y, gridX2, y);
+    strokeWeight(3);
     line(x, gridY1, x, gridY2);
     
     textSize(min(20, 20 * (gridX1 - 10)/textWidth(subjects[i][n])));
@@ -127,8 +132,13 @@ void setup() {
   
   saveState();
   
-  solve();
-  
+  if (!positionMatters) {
+    for (int col = 0; col < n; col++)
+      setOption(0, col, col);
+  }
+  println("A");
+  solve(); //<>//
+  println("B");
   if (solved) {
     textAlign(CENTER, CENTER);
     fill(0);
@@ -146,11 +156,14 @@ void setup() {
       print("\n");
     }
     
-    println("Checks done:", checks);
+    println("Clue checks:", checks);
+    println("Guesses made:", guesses);
   }
   
   else
     println("Puzzle is unsolvable");
+    
+  
 }
 //todo: bind enter key to enter button event//nvm, unless can figure out how to know which button should be bound to enter key (know which textbox selected)
 void draw() {
@@ -164,8 +177,10 @@ void solve() {
     cluesUsed = false;
     
     for (int i = numCluesFinished; i < numClues; i++) {
+      checks += 1;
       Clue cl = clues.get(i - numCluesFinished);
-      processClue(cl);
+      //processClue(cl);
+      cl.process();
       //todo: add way to check if nothing amounted from clue
       if (invalid) {
         revertState();  // Revert to prev state
@@ -199,6 +214,8 @@ void solve() {
   int col = leastOptionsIndices[1];
   for (int guessIndex = 0; guessIndex < n; guessIndex++) {
     if (optionsPossible[row][col][guessIndex] == 1) {
+      guesses += 1;
+      
       setOption(row, col, guessIndex);
       solve();
       if (solved) {
@@ -211,37 +228,40 @@ void solve() {
 }
 //Clue clue;
 int checks = 0;
-void processClue(Clue cl) {
-  //clue = cl;
-  checks += 1;
-  String ct = cl.clueType;
-  int[] subjA = cl.subjectA;
-  int[] subjB = cl.subjectB;
+int guesses = 0;
+//void processClue(Clue cl) {
+//  //clue = cl;
+//  checks += 1;
   
-  if (ct.equals("affirmative"))
-    affirmative(cl, subjA, subjB);
-  else if (ct.equals("negative"))
-    negative(cl, subjA, subjB);
-  else if (ct.equals("at position"))
-    atPosition(cl, subjA, subjB, 1);
-  else if (ct.equals("not at position"))
-    atPosition(cl, subjA, subjB, 0);
-  else if (ct.equals("at either end"))
-    atEitherEnd(cl, subjA, 1);
-  else if (ct.equals("not at either end"))
-    atEitherEnd(cl, subjA, 0);
-  else if (ct.equals("next to"))
-    nextTo(cl, subjA, subjB, 1);
-  else if (ct.equals("not next to"))
-    nextTo(cl, subjA, subjB, 0);
-  else if (ct.equals("immediately left of"))
-    leftOf(cl, subjA, subjB, 0);
-  else if (ct.equals("somewhere left of"))
-    leftOf(cl, subjA, subjB, 1);
-  else if (ct.equals("immediately right of"))
-    rightOf(cl, subjA, subjB, 0);
-  else if (ct.equals("somewhere right of"))
-    rightOf(cl, subjA, subjB, 1);
+//  cl.process();
+//  //String ct = cl.clueType;
+//  //int[] subjA = cl.subjectA;
+//  //int[] subjB = cl.subjectB;
+  
+//  //if (ct.equals("affirmative"))
+//  //  affirmative(cl, subjA, subjB);
+//  //else if (ct.equals("negative"))
+//  //  negative(cl, subjA, subjB);
+//  //else if (ct.equals("at position"))
+//  //  atPosition(cl, subjA, subjB, 1);
+//  //else if (ct.equals("not at position"))
+//  //  atPosition(cl, subjA, subjB, 0);
+//  //else if (ct.equals("at either end"))
+//  //  atEitherEnd(cl, subjA, 1);
+//  //else if (ct.equals("not at either end"))
+//  //  atEitherEnd(cl, subjA, 0);
+//  //else if (ct.equals("next to"))
+//  //  nextTo(cl, subjA, subjB, 1);
+//  //else if (ct.equals("not next to"))
+//  //  nextTo(cl, subjA, subjB, 0);
+//  //else if (ct.equals("immediately left of"))
+//  //  leftOf(cl, subjA, subjB, 0);
+//  //else if (ct.equals("somewhere left of"))
+//  //  leftOf(cl, subjA, subjB, 1);
+//  //else if (ct.equals("immediately right of"))
+//  //  rightOf(cl, subjA, subjB, 0);
+//  //else if (ct.equals("somewhere right of"))
+//  //  rightOf(cl, subjA, subjB, 1);
     
-  //c.linkedFunction.call();
-}
+//  //c.linkedFunction.call();
+//}

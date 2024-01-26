@@ -135,4 +135,31 @@ class Clue {
   //  }
     
   //}
+  
+  void process() {
+    if (this.clueType.equals("affirmative"))
+      affirmative(this, this.subjectA, this.subjectB);
+    else if (this.clueType.equals("negative"))
+      negative(this, this.subjectA, this.subjectB);
+    else if (this.clueType.equals("at position"))
+      atPosition(this, this.subjectA, this.subjectB, 1);
+    else if (this.clueType.equals("not at position"))
+      atPosition(this, this.subjectA, this.subjectB, 0);
+    else if (this.clueType.equals("at either end"))
+      atEitherEnd(this, this.subjectA, 1);
+    else if (this.clueType.equals("not at either end"))
+      atEitherEnd(this, this.subjectA, 0);
+    else if (this.clueType.equals("next to"))
+      nextTo(this, this.subjectA, this.subjectB, 1);
+    else if (this.clueType.equals("not next to"))
+      nextTo(this, this.subjectA, this.subjectB, 0);
+    else if (this.clueType.equals("immediately left of"))
+      leftOf(this, this.subjectA, this.subjectB, 0);
+    else if (this.clueType.equals("somewhere left of"))
+      leftOf(this, this.subjectA, this.subjectB, 1);
+    else if (this.clueType.equals("immediately right of"))
+      rightOf(this, this.subjectA, this.subjectB, 0);
+    else if (this.clueType.equals("somewhere right of"))
+      rightOf(this, this.subjectA, this.subjectB, 1);
+  }
 }

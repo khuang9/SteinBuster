@@ -58,6 +58,10 @@ public void slider1_change1(GSlider source, GEvent event) { //_CODE_:slider1:696
   println("slider1 - GSlider >> GEvent." + event + " @ " + millis());
 } //_CODE_:slider1:696747:
 
+public void checkbox1_clicked1(GCheckbox source, GEvent event) { //_CODE_:checkbox1:598382:
+  println("checkbox1 - GCheckbox >> GEvent." + event + " @ " + millis());
+} //_CODE_:checkbox1:598382:
+
 
 
 // Create all the GUI controls. 
@@ -72,7 +76,7 @@ public void createGUI(){
   window1.setActionOnClose(G4P.KEEP_OPEN);
   window1.addDrawHandler(this, "win_draw2");
   textfield2 = new GTextField(window1, 140, 75, 120, 30, G4P.SCROLLBARS_HORIZONTAL_ONLY);
-  textfield2.setPromptText("Enter options in category");
+  textfield2.setPromptText("Enter category options");
   textfield2.setOpaque(true);
   textfield2.addEventHandler(this, "textfield2_change1");
   button1 = new GButton(window1, 270, 75, 44, 21);
@@ -109,6 +113,11 @@ public void createGUI(){
   label1.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
   label1.setText("Animation Speed");
   label1.setOpaque(false);
+  checkbox1 = new GCheckbox(window1, 7, 6, 120, 20);
+  checkbox1.setIconAlign(GAlign.LEFT, GAlign.MIDDLE);
+  checkbox1.setText("Position matters");
+  checkbox1.setOpaque(false);
+  checkbox1.addEventHandler(this, "checkbox1_clicked1");
   window1.loop();
 }
 
@@ -126,3 +135,4 @@ GDropList selectSubjectB;
 GButton button3; 
 GSlider slider1; 
 GLabel label1; 
+GCheckbox checkbox1; 
