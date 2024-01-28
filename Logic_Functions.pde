@@ -62,7 +62,7 @@ void negative(Clue cl, int[] subjA, int[] subjB) {
 }
 
 void atPosition(Clue cl, int[] subjA, int[] subjB, int type) {
-  if (type == 0) // not at position
+  if (type == 0) // not at position //<>//
     removeOption(subjA[0], subjB[0], subjA[1]);
   
   
@@ -73,8 +73,8 @@ void atPosition(Clue cl, int[] subjA, int[] subjB, int type) {
 }
 
 void atEitherEnd(Clue cl, int[] subj, int type) {
-  if (type == 0) {  // not at either end
-    removeOption(subj[0], 0, subj[1]);  // Remove option from first grid in row //<>//
+  if (type == 0) {  // not at either end //<>//
+    removeOption(subj[0], 0, subj[1]);  // Remove option from first grid in row
     removeOption(subj[0], m - 1, subj[1]);  // Remove option from last grid in row
     cl.hide();//todo: hide clue
   }
@@ -101,7 +101,7 @@ void atEitherEnd(Clue cl, int[] subj, int type) {
 }
 
 void nextTo(Clue cl, int[] subjA, int[] subjB, int type) {
-  if (!positionKnown(subjA) && !positionKnown(subjB)) {
+  if (!positionKnown(subjA) && !positionKnown(subjB)) { //<>//
     if (type == 1) {
       for (int c = 0; c < m; c++) {
         if (c == 0 && optionsPossible[subjB[0]][1][subjB[1]] == 0 ||
@@ -161,15 +161,15 @@ void nextTo(Clue cl, int[] subjA, int[] subjB, int type) {
     subjUnknown = subjA;
   }
   
-  int col = subjectColumns[subjKnown[0]][subjKnown[1]];//indices
+  int knownCol = subjectColumns[subjKnown[0]][subjKnown[1]];//indices
   if (type == 0) {  // not next to
-    if (col == 0)
+    if (knownCol == 0)
       removeOption(subjUnknown[0], 1, subjUnknown[1]);
-    else if (col == m - 1)
-      removeOption(subjUnknown[0], n - 2, subjUnknown[1]);
+    else if (knownCol == m - 1)
+      removeOption(subjUnknown[0], m - 2, subjUnknown[1]);
     else {
-      removeOption(subjUnknown[0], col - 1, subjUnknown[1]);
-      removeOption(subjUnknown[0], col + 1, subjUnknown[1]);
+      removeOption(subjUnknown[0], knownCol - 1, subjUnknown[1]);
+      removeOption(subjUnknown[0], knownCol + 1, subjUnknown[1]);
     }
     
     cl.hide();
@@ -177,27 +177,27 @@ void nextTo(Clue cl, int[] subjA, int[] subjB, int type) {
   }
   
   else {  // next to
-    int knownInd = subjectColumns[subjKnown[0]][subjKnown[1]];//indices
-    if (knownInd == 0) {//indices
+    //int knownInd = subjectColumns[subjKnown[0]][subjKnown[1]];//indices
+    if (knownCol == 0) {//indices
       setOption(subjUnknown[0], 1, subjUnknown[1]);
       cl.hide();
     }
-    else if (knownInd == n - 1) {//indices
-      setOption(subjUnknown[0], n - 2, subjUnknown[1]);
+    else if (knownCol == m - 1) {//indices
+      setOption(subjUnknown[0], m - 2, subjUnknown[1]);
       cl.hide();
     }
     else {
-      if (optionsPossible[subjUnknown[0]][knownInd - 1][subjUnknown[1]] == 0) {
-        setOption(subjUnknown[0], knownInd + 1, subjUnknown[1]);
+      if (optionsPossible[subjUnknown[0]][knownCol - 1][subjUnknown[1]] == 0) {
+        setOption(subjUnknown[0], knownCol + 1, subjUnknown[1]);
         cl.hide();
       }
-      else if (optionsPossible[subjUnknown[0]][knownInd + 1][subjUnknown[1]] == 0) {
-        setOption(subjUnknown[0], knownInd - 1, subjUnknown[1]);
+      else if (optionsPossible[subjUnknown[0]][knownCol + 1][subjUnknown[1]] == 0) {
+        setOption(subjUnknown[0], knownCol - 1, subjUnknown[1]);
         cl.hide();
       }
       else {
         for (int c = 0; c < m; c++) {
-          if (c < knownInd - 1 || knownInd + 1 < c)
+          if (c < knownCol - 1 || knownCol + 1 < c)
             removeOption(subjUnknown[0], c, subjUnknown[1]);
         }
         

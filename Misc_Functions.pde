@@ -1,6 +1,6 @@
 void removeOption(int row, int col, int i) {
   //println(clue.clueType);
-  if (optionsPossible[row][col][i] == 0)//bools
+  if (optionsPossible[row][col][i] == 0)//bools //<>//
     return;
     
   cluesUsed = true;

@@ -24,7 +24,22 @@ public void optionfield_change1(GTextField source, GEvent event) { //_CODE_:opti
 
 public void optionbutton_click1(GButton source, GEvent event) { //_CODE_:optionbutton:609713:
   println("button1 - GButton >> GEvent." + event + " @ " + millis());
-  println(optionfield.getText());
+  int categIndex = int(selectCategory.getSelectedText().substring(0, selectCategory.getSelectedText().indexOf(")"))) - 1;
+  println(selectCategory.getSelectedText(), categIndex);
+  int categOptions = subjects.get(categIndex).size();
+  if (categOptions > m) {
+    m = categOptions;
+    positions.add(str(m));
+  }
+    
+  subjects.get(categIndex).add(optionfield.getText());
+  options.add(categIndex + 1 + "." + categOptions + ") " + optionfield.getText());
+  selectSubjectA.setItems(options, 0);
+  
+  if (selectClueType.getSelectedText().equals("at position") || selectClueType.getSelectedText().equals("not at position"))
+    selectSubjectB.setItems(positions, 0);
+  else
+    selectSubjectB.setItems(options, 0);
 } //_CODE_:optionbutton:609713:
 
 public void categories_click(GDropList source, GEvent event) { //_CODE_:selectCategory:866543:
@@ -37,7 +52,13 @@ public void categoryfield_change1(GTextField source, GEvent event) { //_CODE_:ca
 
 public void categorybutton_click1(GButton source, GEvent event) { //_CODE_:categorybutton:627222:
   println("button2 - GButton >> GEvent." + event + " @ " + millis());
+  n += 1;
   
+  subjects.add(new ArrayList<String>());
+  subjects.get(n-1).add(categoryfield.getText() + ":");
+  
+  categories.add(n + ") " + categoryfield.getText());
+  selectCategory.setItems(categories, 0);
 } //_CODE_:categorybutton:627222:
 
 public void dropList1_click1(GDropList source, GEvent event) { //_CODE_:selectSubjectA:321873:
@@ -46,6 +67,10 @@ public void dropList1_click1(GDropList source, GEvent event) { //_CODE_:selectSu
 
 public void dropList1_click2(GDropList source, GEvent event) { //_CODE_:selectClueType:313781:
   println("selectClueType - GDropList >> GEvent." + event + " @ " + millis());
+  if (selectClueType.getSelectedText().equals("at position") || selectClueType.getSelectedText().equals("not at position"))
+    selectSubjectB.setItems(positions, 0);
+  else
+    selectSubjectB.setItems(options, 0);
 } //_CODE_:selectClueType:313781:
 
 public void selectSubjectB_click(GDropList source, GEvent event) { //_CODE_:selectSubjectB:449193:
@@ -54,6 +79,23 @@ public void selectSubjectB_click(GDropList source, GEvent event) { //_CODE_:sele
 
 public void button3_click1(GButton source, GEvent event) { //_CODE_:button3:480002:
   println("button3 - GButton >> GEvent." + event + " @ " + millis());
+  String A = selectSubjectA.getSelectedText();
+  String B = selectSubjectB.getSelectedText();
+  
+  int brackIndexA = A.indexOf(")");
+  int dotIndexA = A.indexOf(".");
+  int brackIndexB = B.indexOf(")");
+  int dotIndexB = B.indexOf(".");
+  
+  int[] subjA = new int[]{int(A.substring(0, dotIndexA)) - 1, int(A.substring(dotIndexA + 1, brackIndexA)) - 1};
+  int[] subjB;
+  
+  if (selectClueType.getSelectedText().equals("at position") || selectClueType.getSelectedText().equals("not at position"))
+    subjB = new int[]{int(B) - 1, -1};
+  else
+    subjB = new int[]{int(B.substring(0, dotIndexB)) - 1, int(B.substring(dotIndexB + 1, brackIndexB)) - 1};
+    
+  initClues.add(new Clue(subjA, selectClueType.getSelectedText(), subjB));
 } //_CODE_:button3:480002:
 
 public void slider1_change1(GSlider source, GEvent event) { //_CODE_:slider1:696747:
@@ -63,11 +105,12 @@ public void slider1_change1(GSlider source, GEvent event) { //_CODE_:slider1:696
 public void checkbox1_clicked1(GCheckbox source, GEvent event) { //_CODE_:checkbox1:598382:
   println("checkbox1 - GCheckbox >> GEvent." + event + " @ " + millis());
   positionMatters = !positionMatters;
-  println(positionMatters);
 } //_CODE_:checkbox1:598382:
 
 public void button4_click1(GButton source, GEvent event) { //_CODE_:button4:982509:
   println("button4 - GButton >> GEvent." + event + " @ " + millis());
+  initialize();
+  
   checks = 0;
   guesses = 0;
   
@@ -78,7 +121,7 @@ public void button4_click1(GButton source, GEvent event) { //_CODE_:button4:9825
   //keyCode = ENTER;
   //keyPressed();
   //solve();
-  loop(); //<>//
+  loop();
   //printResult();
   
 } //_CODE_:button4:982509:
@@ -86,6 +129,11 @@ public void button4_click1(GButton source, GEvent event) { //_CODE_:button4:9825
 public void checkbox2_clicked1(GCheckbox source, GEvent event) { //_CODE_:checkbox2:596463:
   println("checkbox2 - GCheckbox >> GEvent." + event + " @ " + millis());
 } //_CODE_:checkbox2:596463:
+
+public void gridupdate_click1(GButton source, GEvent event) { //_CODE_:gridupdate:652888:
+  println("gridupdate - GButton >> GEvent." + event + " @ " + millis());
+  initialize();
+} //_CODE_:gridupdate:652888:
 
 
 
@@ -120,7 +168,7 @@ public void createGUI(){
   selectSubjectA = new GDropList(window1, 15, 150, 90, 80, 3, 10);
   selectSubjectA.setItems(loadStrings("list_321873"), 0);
   selectSubjectA.addEventHandler(this, "dropList1_click1");
-  selectClueType = new GDropList(window1, 120, 150, 90, 80, 3, 10);
+  selectClueType = new GDropList(window1, 110, 150, 110, 80, 3, 10);
   selectClueType.setItems(loadStrings("list_313781"), 0);
   selectClueType.addEventHandler(this, "dropList1_click2");
   selectSubjectB = new GDropList(window1, 225, 150, 90, 80, 3, 10);
@@ -154,6 +202,9 @@ public void createGUI(){
   checkbox2.setText("Show Animation");
   checkbox2.setOpaque(false);
   checkbox2.addEventHandler(this, "checkbox2_clicked1");
+  gridupdate = new GButton(window1, 310, 219, 80, 30);
+  gridupdate.setText("Update Puzzle");
+  gridupdate.addEventHandler(this, "gridupdate_click1");
   window1.loop();
 }
 
@@ -174,3 +225,4 @@ GLabel label1;
 GCheckbox checkbox1; 
 GButton button4; 
 GCheckbox checkbox2; 
+GButton gridupdate; 

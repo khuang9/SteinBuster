@@ -150,7 +150,7 @@ class Clue {
   //}
   
   void process() {
-    if (!positionMatters) {
+    if (!positionMatters) { //<>//
       if (!(this.clueType.equals("affirmative") || this.clueType.equals("negative")))
         this.hide();
         return;
