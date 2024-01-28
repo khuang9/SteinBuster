@@ -5,22 +5,25 @@ import g4p_controls.*;
 //or just check when stuck
 //todo: save initial state//done
 //todo: if position doesn't matter, just ignore any position clues//done
+//todo: m dimension//done
+//todo: move hat: player: etc to start instead of end
 //todo: gui working
 //todo: suggestions, textbox class
 //todo: save steps in array, make step class, in draw() animate steps[step], step+=1
 int n = 4;//number of rows, number of columns, and number of options
-int[][][] optionsPossible = new int[n][n][n];//bools
-int[][][] prevOptionsPossible = new int[n][n][n];
-int[][][] initOptionsPossible = new int[n][n][n];
-int[][] subjectColumns = new int[n][n];//indices
-int[][] prevSubjectColumns = new int[n][n];
-int[][] initSubjectColumns = new int[n][n];
-int[][] subjectNumPossibilities = new int[n][n];//num poss for subj
-int[][] prevSubjectNumPossibilities = new int[n][n];
-int[][] initSubjectNumPossibilities = new int[n][n];
-int[][] gridNumPossibilities = new int[n][n];//num poss for grid
-int[][] prevGridNumPossibilities = new int[n][n];
-int[][] initGridNumPossibilities = new int[n][n];
+int m = 5;
+int[][][] optionsPossible = new int[n][m][m];//bools
+int[][][] prevOptionsPossible = new int[n][m][m];
+int[][][] initOptionsPossible = new int[n][m][m];
+int[][] subjectColumns = new int[n][m];//indices
+int[][] prevSubjectColumns = new int[n][m];
+int[][] initSubjectColumns = new int[n][m];
+int[][] subjectNumPossibilities = new int[n][m];//num poss for subj
+int[][] prevSubjectNumPossibilities = new int[n][m];
+int[][] initSubjectNumPossibilities = new int[n][m];
+int[][] gridNumPossibilities = new int[n][m];//num poss for grid
+int[][] prevGridNumPossibilities = new int[n][m];
+int[][] initGridNumPossibilities = new int[n][m];
 ArrayList<Clue> clues = new ArrayList<Clue>();
 ArrayList<Clue> prevClues = new ArrayList<Clue>();
 ArrayList<Clue> initClues = new ArrayList<Clue>();
@@ -31,7 +34,7 @@ boolean positionMatters = false;
 int numCluesFinished = 0;
 int prevNumCluesFinished = 0;
 
-String[][] subjects = new String[n][n+1];
+String[][] subjects = new String[n][m+1];
 
 boolean invalid = false;//invalid reset to false every time a new guess is made
 // todo: check if invalid after every clue process, if so, break
@@ -77,7 +80,7 @@ void setup() {
   
   gridWidth = gridX2 - gridX1;
   gridHeight = gridY2 - gridY1;
-  cellWidth = gridWidth/n;
+  cellWidth = gridWidth/m;
   cellHeight = gridHeight/n;
   
   //strokeWeight(3);
@@ -87,28 +90,28 @@ void setup() {
   
   
   for (int i = 0; i < n; i++) {
-    for (int j = 0; j < n; j++) {
-      for (int k = 0; k < n; k++) {
+    for (int j = 0; j < m; j++) {
+      for (int k = 0; k < m; k++) {
         initOptionsPossible[i][j][k] = 1;
       }
     }
   }
   
   for (int i = 0; i < n; i++) {
-    for (int j = 0; j < n; j++) {
+    for (int j = 0; j < m; j++) {
       initSubjectColumns[i][j] = -1;
     }
   }
   
   for (int i = 0; i < n; i++) {
-    for (int j = 0; j < n; j++) {
-      initSubjectNumPossibilities[i][j] = n;
+    for (int j = 0; j < m; j++) {
+      initSubjectNumPossibilities[i][j] = m;
     }
   }
   
   for (int i = 0; i < n; i++) {
-    for (int j = 0; j < n; j++) {
-      initGridNumPossibilities[i][j] = n;
+    for (int j = 0; j < m; j++) {
+      initGridNumPossibilities[i][j] = m;
     }
   }
   //todo: keep initial states, so can revert every new solve
@@ -127,13 +130,13 @@ void setup() {
   initClues.add(new Clue(new int[]{3, 2}, "next to", new int[]{2, 1}));
   //numClues = clues.size();
   
-  subjects[0] = new String[]{"blue", "pink", "white", "yellow", "Hat:"};
-  subjects[1] = new String[]{"Eric", "Oscar", "Peter", "Richard", "Name:"};
-  subjects[2] = new String[]{"Aguero", "Cruyff", "Pele", "Ronaldinho", "Player:"};
-  subjects[3] = new String[]{"cousin", "friend", "nephew", "uncle", "Companion:"};
+  subjects[0] = new String[]{"blue", "pink", "white", "yellow", "A", "Hat:"};
+  subjects[1] = new String[]{"Eric", "Oscar", "Peter", "Richard", "B", "Name:"};
+  subjects[2] = new String[]{"Aguero", "Cruyff", "Pele", "Ronaldinho", "C", "Player:"};
+  subjects[3] = new String[]{"cousin", "friend", "nephew", "uncle", "D", "Companion:"};
   
   
-  resetState();
+  resetState(); //<>//
   //textAlign(RIGHT, CENTER);
   //textSize(20);
   //fill(255);
@@ -197,8 +200,8 @@ void printResult() {
   //println(checks, positionMatters);
   if (solved) {
     for (int i = 0; i < n; i++) {
-      print(subjects[i][n] + "\t\t");
-      for(int j = 0; j < n; j++) {
+      print(subjects[i][m] + "\t\t");
+      for(int j = 0; j < m; j++) {
         String subject = subjects[i][indexInArray(optionsPossible[i][j], 1)];
         print(subject + "\t\t");
       }
@@ -227,7 +230,7 @@ void draw() {
       textAlign(CENTER, CENTER);
       fill(0);
       for (int i = 0; i < n; i++) {
-        for(int j = 0; j < n; j++) {
+        for(int j = 0; j < m; j++) {
           String subject = subjects[i][indexInArray(optionsPossible[i][j], 1)];
           textSize(min(20, 20 * (cellWidth - 10)/textWidth(subject)));
           text(subject, gridX1 + (j + 0.5) * cellWidth, gridY1 + (i + 0.5) * cellHeight);
@@ -278,18 +281,22 @@ void drawPuzzleGrid() {
   textSize(20);
   
   for (int i = 0; i < n; i++) {
-    int x = gridX1 + i*cellWidth;
     int y = gridY1 + i*cellHeight;
     
     strokeWeight(1);
     line(gridX1, y, gridX2, y);
-    strokeWeight(3);
-    line(x, gridY1, x, gridY2);
     
-    textSize(min(20, 20 * (gridX1 - 10)/textWidth(subjects[i][n])));
-    text(subjects[i][n], gridX1 - 5, y + cellHeight/2);
+    textSize(min(20, 20 * (gridX1 - 10)/textWidth(subjects[i][m])));
+    text(subjects[i][m], gridX1 - 5, y + cellHeight/2);
     
     textSize(20);
+  }
+  
+  for (int j = 0; j < m; j++) {
+    int x = gridX1 + j*cellWidth;
+    
+    strokeWeight(3);
+    line(x, gridY1, x, gridY2);
   }
   
 }
@@ -299,7 +306,7 @@ void drawPuzzleState() {
   textAlign(CENTER, CENTER); //<>//
   fill(0);
   for (int i = 0; i < n; i++) {
-    for(int j = 0; j < n; j++) {
+    for(int j = 0; j < m; j++) {
       if (gridNumPossibilities[i][j] == 1) {
         String subject = subjects[i][indexInArray(optionsPossible[i][j], 1)];
         textSize(min(20, 20 * (cellWidth - 10)/textWidth(subject)));
@@ -352,12 +359,12 @@ void solve() {
       break;
   }
   
-  if (arrayTotal(gridNumPossibilities) == n*n) {//sum of everything in array of num possibilr for grid
+  if (arrayTotal(gridNumPossibilities) == n*m) {//sum of everything in array of num possibilr for grid
     solved = true;
     return;
   }
   
-  if (arrayTotal(gridNumPossibilities) < n*n) {
+  if (arrayTotal(gridNumPossibilities) < n*m) {
     revertState();  // Revert to prev state
     return;
   }
@@ -370,7 +377,7 @@ void solve() {
   
   int row = leastOptionsIndices[0];
   int col = leastOptionsIndices[1];
-  for (int guessIndex = 0; guessIndex < n; guessIndex++) {
+  for (int guessIndex = 0; guessIndex < m; guessIndex++) {
     if (optionsPossible[row][col][guessIndex] == 1) {
       guesses += 1;
       

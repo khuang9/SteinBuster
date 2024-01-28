@@ -72,13 +72,13 @@ public void button4_click1(GButton source, GEvent event) { //_CODE_:button4:9825
   guesses = 0;
   
   if (!positionMatters) {
-    for (int col = 0; col < n; col++)
+    for (int col = 0; col < m; col++)
       setOption(0, col, col);
   }
   //keyCode = ENTER;
   //keyPressed();
   //solve();
-  loop();
+  loop(); //<>//
   //printResult();
   
 } //_CODE_:button4:982509:

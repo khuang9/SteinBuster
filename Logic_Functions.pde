@@ -16,7 +16,7 @@ void affirmative(Clue cl, int[] subjA, int[] subjB) {
     int pairsFound = 0;
     int pairCol = -1;  // Invalid index makes errors easier to catch
     
-    for (int c = 0; c < n; c++) {  // Iterate through all columns
+    for (int c = 0; c < m; c++) {  // Iterate through all columns
       if (optionsPossible[subjA[0]][c][subjA[1]] == 1 && optionsPossible[subjB[0]][c][subjB[1]] == 1) {//bools
         pairsFound += 1;
         pairCol = c;
@@ -75,23 +75,23 @@ void atPosition(Clue cl, int[] subjA, int[] subjB, int type) {
 void atEitherEnd(Clue cl, int[] subj, int type) {
   if (type == 0) {  // not at either end
     removeOption(subj[0], 0, subj[1]);  // Remove option from first grid in row //<>//
-    removeOption(subj[0], n - 1, subj[1]);  // Remove option from last grid in row
+    removeOption(subj[0], m - 1, subj[1]);  // Remove option from last grid in row
     cl.hide();//todo: hide clue
   }
   
   else {  // at either end
     if (optionsPossible[subj[0]][0][subj[1]] == 0) {//bools
-      setOption(subj[0], n - 1, subj[1]);
+      setOption(subj[0], m - 1, subj[1]);
       cl.hide();//todo: hide clue
     }
     
-    else if (optionsPossible[subj[0]][n - 1][subj[1]] == 0) {//bools
+    else if (optionsPossible[subj[0]][m - 1][subj[1]] == 0) {//bools
       setOption(subj[0], 0, subj[1]);
       cl.hide();//todo: hide clue
     }
     
     else {
-      for (int c = 1; c < n - 1; c++)  // Iterate through all non-end columns
+      for (int c = 1; c < m - 1; c++)  // Iterate through all non-end columns
         removeOption(subj[0], c, subj[1]);
       
       //numCluesUsed += 1;
@@ -103,15 +103,15 @@ void atEitherEnd(Clue cl, int[] subj, int type) {
 void nextTo(Clue cl, int[] subjA, int[] subjB, int type) {
   if (!positionKnown(subjA) && !positionKnown(subjB)) {
     if (type == 1) {
-      for (int c = 0; c < n; c++) {
+      for (int c = 0; c < m; c++) {
         if (c == 0 && optionsPossible[subjB[0]][1][subjB[1]] == 0 ||
-            c == n - 1 && optionsPossible[subjB[0]][c-1][subjB[1]] == 0) {//bools
+            c == m - 1 && optionsPossible[subjB[0]][c-1][subjB[1]] == 0) {//bools
           removeOption(subjA[0], c, subjA[1]);
           //clueUsed = true;
         }
         //else if (c == num columns - 1 && __[subjB[0]][c-1][subjB[1]] == 0)//bools
         //  removeOption(subjA[0], c, subjB[0]);
-        else if (0 < c && c < n - 1) {
+        else if (0 < c && c < m - 1) {
           if (optionsPossible[subjB[0]][c-1][subjB[1]] == 0 && optionsPossible[subjB[0]][c+1][subjB[1]] == 0) {//bools
             removeOption(subjA[0], c, subjA[1]);
             //clueUsed = true;
@@ -119,13 +119,13 @@ void nextTo(Clue cl, int[] subjA, int[] subjB, int type) {
         }
         
         if (c == 0 && optionsPossible[subjA[0]][1][subjA[1]] == 0 ||
-            c == n - 1 && optionsPossible[subjA[0]][c-1][subjA[1]] == 0) {//bools
+            c == m - 1 && optionsPossible[subjA[0]][c-1][subjA[1]] == 0) {//bools
           removeOption(subjB[0], c, subjB[1]);
           //clueUsed = true;
         }
         //else if (c == num columns - 1 && __[subjB[0]][c-1][subjB[1]] == 0)//bools
         //  removeOption(subjA[0], c, subjB[0]);
-        else if (0 < c && c < n - 1) {
+        else if (0 < c && c < m - 1) {
           if (optionsPossible[subjA[0]][c-1][subjA[1]] == 0 && optionsPossible[subjA[0]][c+1][subjA[1]] == 0) {//bools
             removeOption(subjB[0], c, subjB[1]);
             //cluesUsed = true;
@@ -165,7 +165,7 @@ void nextTo(Clue cl, int[] subjA, int[] subjB, int type) {
   if (type == 0) {  // not next to
     if (col == 0)
       removeOption(subjUnknown[0], 1, subjUnknown[1]);
-    else if (col == n - 1)
+    else if (col == m - 1)
       removeOption(subjUnknown[0], n - 2, subjUnknown[1]);
     else {
       removeOption(subjUnknown[0], col - 1, subjUnknown[1]);
@@ -196,7 +196,7 @@ void nextTo(Clue cl, int[] subjA, int[] subjB, int type) {
         cl.hide();
       }
       else {
-        for (int c = 0; c < n; c++) {
+        for (int c = 0; c < m; c++) {
           if (c < knownInd - 1 || knownInd + 1 < c)
             removeOption(subjUnknown[0], c, subjUnknown[1]);
         }
@@ -208,19 +208,19 @@ void nextTo(Clue cl, int[] subjA, int[] subjB, int type) {
 }
 
 void leftOf(Clue cl, int[] subjA, int[] subjB, int type) {
-  removeOption(subjA[0], n - 1, subjA[1]); //<>//
+  removeOption(subjA[0], m - 1, subjA[1]); //<>//
   removeOption(subjB[0], 0, subjB[1]);
   
   if (!positionKnown(subjA) && !positionKnown(subjB)) {
     if (type == 0) {
-      for (int c = 0; c < n - 1; c++) {
+      for (int c = 0; c < m - 1; c++) {
         if (optionsPossible[subjB[0]][c+1][subjB[1]] == 0) {//bools
           removeOption(subjA[0], c, subjA[1]);
           //clueUsed = true;
         }
       }
       
-      for (int c = 1; c < n; c++) {
+      for (int c = 1; c < m; c++) {
         if (optionsPossible[subjA[0]][c-1][subjA[1]] == 0) {//bools
           removeOption(subjB[0], c, subjB[1]);
           //clueUsed = true;
@@ -260,7 +260,7 @@ void leftOf(Clue cl, int[] subjA, int[] subjB, int type) {
     }
     
     else {
-      for (int c = subjectColumns[subjB[0]][subjB[1]]; c < n; c++)//indices
+      for (int c = subjectColumns[subjB[0]][subjB[1]]; c < m; c++)//indices
         removeOption(subjA[0], c, subjA[1]);
     }
     
@@ -270,18 +270,18 @@ void leftOf(Clue cl, int[] subjA, int[] subjB, int type) {
 //todo: precalculate indices and other aspects of subjA and B and store in variables
 void rightOf(Clue cl, int[] subjA, int[] subjB, int type) {
   removeOption(subjA[0], 0, subjA[1]);
-  removeOption(subjB[0], n - 1, subjB[1]);
+  removeOption(subjB[0], m - 1, subjB[1]);
   
   if (!positionKnown(subjA) && !positionKnown(subjB)) {
     if (type == 0) {
-      for (int c = 0; c < n - 1; c++) {
+      for (int c = 0; c < m - 1; c++) {
         if (optionsPossible[subjA[0]][c+1][subjA[1]] == 0) {//bools
           removeOption(subjB[0], c, subjB[1]);
           //clueUsed = true;
         }
       }
       
-      for (int c = 1; c < n; c++) {
+      for (int c = 1; c < m; c++) {
         if (optionsPossible[subjB[0]][c-1][subjB[1]] == 0) {//bools
           removeOption(subjA[0], c, subjA[1]);
           //clueUsed = true;
@@ -316,7 +316,7 @@ void rightOf(Clue cl, int[] subjA, int[] subjB, int type) {
   
   else {  // somewhere right of
     if (positionKnown(subjA)) {
-      for (int c = subjectColumns[subjA[0]][subjA[1]]; c < n; c++)//indices
+      for (int c = subjectColumns[subjA[0]][subjA[1]]; c < m; c++)//indices
         removeOption(subjB[0], c, subjB[1]);
     }
     
@@ -332,7 +332,7 @@ void rightOf(Clue cl, int[] subjA, int[] subjB, int type) {
 
 boolean stuck() {
   for (int row = 0; row < n; row++) {
-    for (int col = 0; col < n; col++) {
+    for (int col = 0; col < m; col++) {
       if (gridNumPossibilities[row][col] == 1) {
         int subjIndex = indexInArray(optionsPossible[row][col], 1);
         
