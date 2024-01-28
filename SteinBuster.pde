@@ -3,8 +3,8 @@ import g4p_controls.*;
 //todo: if clueused, check if anything can be confirmed (if any only has one poss left, use subjectnumpossibilities)
 //check after: negative, not at position, not at either end, not next to, any left of, any right of
 //or just check when stuck
-//todo: save initial state
-//todo: if position doesn't matter, just ignore any position clues
+//todo: save initial state//done
+//todo: if position doesn't matter, just ignore any position clues//done
 //todo: gui working
 //todo: suggestions, textbox class
 //todo: save steps in array, make step class, in draw() animate steps[step], step+=1
@@ -113,8 +113,8 @@ void setup() {
   }
   //todo: keep initial states, so can revert every new solve
   //todo: animate steps
-  //initClues.add(new Clue(new int[]{3, 3}, "at position", new int[]{2, -1}));//todo: gives index error when position doesn't matter
-  //initClues.add(new Clue(new int[]{2, 0}, "at position", new int[]{3, -1}));//todo: gives index error when position doesn't matter
+  initClues.add(new Clue(new int[]{3, 3}, "at position", new int[]{2, -1}));//todo: gives index error when position doesn't matter
+  initClues.add(new Clue(new int[]{2, 0}, "at position", new int[]{3, -1}));//todo: gives index error when position doesn't matter
   initClues.add(new Clue(new int[]{0, 1}, "at position", new int[]{2, -1}));
   initClues.add(new Clue(new int[]{1, 2}, "next to", new int[]{0, 3}));
   initClues.add(new Clue(new int[]{1, 2}, "immediately left of", new int[]{0, 1}));
@@ -247,6 +247,9 @@ void draw() {
       text("UNSOLVABLE", width/2, height/2);
     }
     resetState();
+    saveState();
+    //for (Clue cl : clues)
+    //  println(cl.subjectA[0], cl.clueType);
     solved = false;
     noLoop();
   }

@@ -76,9 +76,9 @@ void copyArray(ArrayList<Clue> copyFrom, ArrayList<Clue> copyTo) {
   
   for (int i = 0; i < copyFromSize; i++) {
     if (i < copyToSize)
-      copyTo.set(i, copyFrom.get(i));
+      copyTo.set(i, copyFrom.get(i).copyClue());
     else
-      copyTo.add(copyFrom.get(i));
+      copyTo.add(copyFrom.get(i).copyClue());
   }
 }
 

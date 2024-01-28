@@ -208,7 +208,7 @@ void nextTo(Clue cl, int[] subjA, int[] subjB, int type) {
 }
 
 void leftOf(Clue cl, int[] subjA, int[] subjB, int type) {
-  removeOption(subjA[0], n - 1, subjA[1]);
+  removeOption(subjA[0], n - 1, subjA[1]); //<>//
   removeOption(subjB[0], 0, subjB[1]);
   
   if (!positionKnown(subjA) && !positionKnown(subjB)) {

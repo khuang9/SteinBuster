@@ -18,14 +18,27 @@ class Clue {
     numClues += 1;
   }
   
+  Clue(int[] a, String ct, int[] b, int i) {
+    this.subjectA = a;
+    this.subjectB = b;
+    this.clueType = ct;
+    this.index = i;
+  }
+  
   // METHODS
+  Clue copyClue() {
+    return new Clue(this.subjectA, this.clueType, this.subjectB, this.index);
+  }
+  
+  
   void hide() {
     Clue c = clues.get(numClues - 1 - numCluesFinished);
+    println(c.clueType, numClues - 1 - numCluesFinished);
     
     // Replace clue to hide with last clue in list
     c.index = this.index;
     clues.set(this.index, c);
-    
+    println(clues.get(this.index).clueType, this.index);
     numCluesFinished += 1;
     cluesUsed = true;
     //numCluesUsed += 1;
@@ -137,6 +150,12 @@ class Clue {
   //}
   
   void process() {
+    if (!positionMatters) {
+      if (!(this.clueType.equals("affirmative") || this.clueType.equals("negative")))
+        this.hide();
+        return;
+    }
+    
     if (this.clueType.equals("affirmative"))
       affirmative(this, this.subjectA, this.subjectB);
     else if (this.clueType.equals("negative"))
