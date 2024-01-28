@@ -60,7 +60,30 @@ public void slider1_change1(GSlider source, GEvent event) { //_CODE_:slider1:696
 
 public void checkbox1_clicked1(GCheckbox source, GEvent event) { //_CODE_:checkbox1:598382:
   println("checkbox1 - GCheckbox >> GEvent." + event + " @ " + millis());
+  positionMatters = !positionMatters;
+  println(positionMatters);
 } //_CODE_:checkbox1:598382:
+
+public void button4_click1(GButton source, GEvent event) { //_CODE_:button4:982509:
+  println("button4 - GButton >> GEvent." + event + " @ " + millis());
+  checks = 0;
+  guesses = 0;
+  
+  if (!positionMatters) {
+    for (int col = 0; col < n; col++)
+      setOption(0, col, col);
+  }
+  //keyCode = ENTER;
+  //keyPressed();
+  //solve();
+  loop();
+  //printResult();
+  
+} //_CODE_:button4:982509:
+
+public void checkbox2_clicked1(GCheckbox source, GEvent event) { //_CODE_:checkbox2:596463:
+  println("checkbox2 - GCheckbox >> GEvent." + event + " @ " + millis());
+} //_CODE_:checkbox2:596463:
 
 
 
@@ -92,32 +115,43 @@ public void createGUI(){
   button2 = new GButton(window1, 270, 20, 44, 21);
   button2.setText("Enter");
   button2.addEventHandler(this, "button2_click1");
-  selectSubjectA = new GDropList(window1, 15, 175, 90, 80, 3, 10);
+  selectSubjectA = new GDropList(window1, 15, 150, 90, 80, 3, 10);
   selectSubjectA.setItems(loadStrings("list_321873"), 0);
   selectSubjectA.addEventHandler(this, "dropList1_click1");
-  selectClueType = new GDropList(window1, 120, 175, 90, 80, 3, 10);
+  selectClueType = new GDropList(window1, 120, 150, 90, 80, 3, 10);
   selectClueType.setItems(loadStrings("list_313781"), 0);
   selectClueType.addEventHandler(this, "dropList1_click2");
-  selectSubjectB = new GDropList(window1, 225, 175, 90, 80, 3, 10);
+  selectSubjectB = new GDropList(window1, 225, 150, 90, 80, 3, 10);
   selectSubjectB.setItems(loadStrings("list_449193"), 0);
   selectSubjectB.addEventHandler(this, "selectSubjectB_click");
-  button3 = new GButton(window1, 330, 175, 60, 21);
+  button3 = new GButton(window1, 330, 150, 60, 21);
   button3.setText("Add clue");
   button3.addEventHandler(this, "button3_click1");
-  slider1 = new GSlider(window1, 100, 240, 200, 21, 10.0);
-  slider1.setLimits(0.5, 0.0, 1.0);
-  slider1.setNumberFormat(G4P.DECIMAL, 2);
+  slider1 = new GSlider(window1, 15, 235, 200, 47, 10.0);
+  slider1.setShowValue(true);
+  slider1.setLimits(5, 1, 10);
+  slider1.setNbrTicks(10);
+  slider1.setShowTicks(true);
+  slider1.setNumberFormat(G4P.INTEGER, 0);
   slider1.setOpaque(false);
   slider1.addEventHandler(this, "slider1_change1");
-  label1 = new GLabel(window1, 150, 220, 100, 20);
+  label1 = new GLabel(window1, 15, 220, 100, 20);
   label1.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
   label1.setText("Animation Speed");
   label1.setOpaque(false);
   checkbox1 = new GCheckbox(window1, 7, 6, 120, 20);
   checkbox1.setIconAlign(GAlign.LEFT, GAlign.MIDDLE);
-  checkbox1.setText("Position matters");
+  checkbox1.setText("Position Matters");
   checkbox1.setOpaque(false);
   checkbox1.addEventHandler(this, "checkbox1_clicked1");
+  button4 = new GButton(window1, 310, 259, 80, 30);
+  button4.setText("Solve");
+  button4.addEventHandler(this, "button4_click1");
+  checkbox2 = new GCheckbox(window1, 15, 277, 120, 20);
+  checkbox2.setIconAlign(GAlign.LEFT, GAlign.MIDDLE);
+  checkbox2.setText("Show Animation");
+  checkbox2.setOpaque(false);
+  checkbox2.addEventHandler(this, "checkbox2_clicked1");
   window1.loop();
 }
 
@@ -136,3 +170,5 @@ GButton button3;
 GSlider slider1; 
 GLabel label1; 
 GCheckbox checkbox1; 
+GButton button4; 
+GCheckbox checkbox2; 

@@ -70,10 +70,15 @@ void copyArray(int[][] copyFrom, int[][] copyTo) {
 }
 
 void copyArray(ArrayList<Clue> copyFrom, ArrayList<Clue> copyTo) {
-  copyTo = new ArrayList<Clue>();
+  //copyTo = new ArrayList<Clue>(); //<>//
+  int copyFromSize = copyFrom.size();
+  int copyToSize = copyTo.size();
   
-  for (int i = 0; i < copyFrom.size(); i++) {
-    copyTo.add(copyFrom.get(i));
+  for (int i = 0; i < copyFromSize; i++) {
+    if (i < copyToSize)
+      copyTo.set(i, copyFrom.get(i));
+    else
+      copyTo.add(copyFrom.get(i));
   }
 }
 
@@ -126,4 +131,13 @@ void revertState() {
   copyArray(prevSubjectNumPossibilities, subjectNumPossibilities);
   copyArray(prevClues, clues);
   numCluesFinished = prevNumCluesFinished;
+}
+
+void resetState() {
+  copyArray(initOptionsPossible, optionsPossible);
+  copyArray(initSubjectColumns, subjectColumns);
+  copyArray(initGridNumPossibilities, gridNumPossibilities);
+  copyArray(initSubjectNumPossibilities, subjectNumPossibilities);
+  copyArray(initClues, clues);
+  numCluesFinished = 0;
 }
