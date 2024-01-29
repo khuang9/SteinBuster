@@ -26,8 +26,14 @@ public void optionfield_change1(GTextField source, GEvent event) { //_CODE_:opti
   
   if (start == end)
     optsugg.setItems(filler, 0);
-  else
-    optsugg.setItems(subset(optSuggestions, start, end-start), 0);
+  else {
+    String[] suggested = subset(optSuggestions, start, end-start);
+    int[] freqs = subset(optFrequency, start, end-start);
+    
+    insertionSort(freqs, suggested);
+    
+    optsugg.setItems(suggested, 0);
+  }
 } //_CODE_:optionfield:899112:
 
 public void optionbutton_click1(GButton source, GEvent event) { //_CODE_:optionbutton:609713:
@@ -42,8 +48,10 @@ public void optionbutton_click1(GButton source, GEvent event) { //_CODE_:optionb
     
   subjects.get(categIndex).add(optionfield.getText());
   //options.add(categIndex + 1 + "." + categOptions + ") " + optionfield.getText());
-  options = addString(options, categIndex + 1 + "." + categOptions + ") " + optionfield.getText());
-  optSuggestions = addString(optSuggestions, optionfield.getText());
+  options = addString(options, new int[options.length+1], categIndex + 1 + "." + categOptions + ") " + optionfield.getText());  // call with placeholder int[]
+  if (index(optSuggestions, optionfield.getText()) == -1)
+    optFrequency = expand(optFrequency, optFrequency.length + 1);
+  optSuggestions = addString(optSuggestions, optFrequency, optionfield.getText());
   
   
 
@@ -83,8 +91,14 @@ public void categoryfield_change1(GTextField source, GEvent event) { //_CODE_:ca
   
   if (start == end)
     categsugg.setItems(filler, 0);
-  else
-    categsugg.setItems(subset(categSuggestions, start, end-start), 0);
+  else {
+    String[] suggested = subset(categSuggestions, start, end-start);
+    int[] freqs = subset(categFrequency, start, end-start);
+    
+    insertionSort(freqs, suggested);
+    
+    categsugg.setItems(suggested, 0);
+  }
 } //_CODE_:categoryfield:602102:
 
 public void categorybutton_click1(GButton source, GEvent event) { //_CODE_:categorybutton:627222:
@@ -95,7 +109,9 @@ public void categorybutton_click1(GButton source, GEvent event) { //_CODE_:categ
   subjects.get(n-1).add(categoryfield.getText() + ":");
   
   categories.add(n + ") " + categoryfield.getText());
-  categSuggestions = addString(categSuggestions, categoryfield.getText());
+  if (index(categSuggestions, categoryfield.getText()) == -1)
+    categFrequency = expand(categFrequency, categFrequency.length + 1);
+  categSuggestions = addString(categSuggestions, categFrequency, categoryfield.getText());
   selectCategory.setItems(categories, 0);
   
   categoryfield.setText("");

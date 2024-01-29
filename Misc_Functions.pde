@@ -114,14 +114,14 @@ int indexInArray(int[] arr, int el) {
   
   return -1;
 }
-
-boolean in(String[] arr, String el) {
-  for (String s : arr) {
-    if (s.equals(el))
-      return true;
+//todo: use binary search in this
+int index(String[] arr, String el) {
+  for (int i = 0; i < arr.length; i++) {
+    if (arr[i].equals(el))
+      return i;
   }
   
-  return false;
+  return -1;
 }
 
 void saveState() {
@@ -153,13 +153,23 @@ void resetState() {
 
 void saveSuggestions() {
   PrintWriter categs = createWriter("SuggestionData/categories.txt");
+  PrintWriter catFreq = createWriter("SuggestionData/categoryFrequency.txt");
   PrintWriter opts = createWriter("SuggestionData/options.txt");
+  PrintWriter optFreq = createWriter("SuggestionData/optionFrequency.txt");
   
   categs.println(join(categSuggestions, ","));
   categs.flush();
   categs.close();
-  printArray(optSuggestions);
+  
+  catFreq.println(join(str(categFrequency), ","));
+  catFreq.flush();
+  catFreq.close();
+  
   opts.println(join(optSuggestions, ","));
   opts.flush();
   opts.close();
+  
+  optFreq.println(join(str(optFrequency), ","));
+  optFreq.flush();
+  optFreq.close();
 }

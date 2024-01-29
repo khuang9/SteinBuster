@@ -47,8 +47,10 @@ int prevNumCluesFinished = 0;
 ArrayList<ArrayList<String>> subjects = new ArrayList<ArrayList<String>>();
 ArrayList<String> categories = new ArrayList<String>();
 String[] categSuggestions;
+int[] categFrequency;
 String[] options = new String[0];
 String[] optSuggestions;
+int[] optFrequency;
 ArrayList<String> positions = new ArrayList<String>();
 
 boolean invalid = false;//invalid reset to false every time a new guess is made
@@ -80,7 +82,9 @@ ArrayList<String> filler = new ArrayList<String>();
 String[] t;
 void setup() {
   categSuggestions = split(loadStrings("SuggestionData/categories.txt")[0], ",");
+  categFrequency = int(split(loadStrings("SuggestionData/categoryFrequency.txt")[0], ","));
   optSuggestions = split(loadStrings("SuggestionData/options.txt")[0], ",");
+  optFrequency = int(split(loadStrings("SuggestionData/optionFrequency.txt")[0], ","));
   //saveSuggestions();
   //t = split(loadStrings("SuggestionData/test.txt")[0], ",");
   //printArray(t);
@@ -444,30 +448,59 @@ int binarySearch(String[] arr, String word, int start, int end) {
 }
 
 
-String[] addString(String[] arr, String word) {
-  if (in(arr, word))
+String[] addString(String[] arr, int[] linkedArr, String word) {
+  int wordIndex = index(arr, word);
+  
+  if (wordIndex != -1) { //<>//
+    linkedArr[wordIndex] += 1;
     return arr;
+  }
     
   int arrSize = arr.length;
   
-  if (arrSize == 0)
+  if (arrSize == 0) {
+    linkedArr[arrSize] = 1;
     return append(arr, word);
+  }
    
   int addIndex = binarySearch(arr, realWord(word), 0, arrSize - 1);
   
   arr = append(arr, arr[arrSize - 1]);
+  linkedArr[arrSize] = linkedArr[arrSize-1];
   
-  for (int i = arrSize - 1; i > addIndex; i--)
+  for (int i = arrSize - 1; i > addIndex; i--) {
     arr[i] = arr[i-1];
+    linkedArr[i] = linkedArr[i-1];
+  }
     
   arr[addIndex] = word;
+  linkedArr[addIndex] = 1;
   
   return arr;
 }
 
-void insertionSort(ArrayList<String[]> arr) {
-  //insertion sort based on times chosen
-  //String[0] is the string, String[1] is the times chosen
+void insertionSort(int[] arr, String[] linkedArr) {
+  for (int i = 1; i < arr.length; i++) {
+    int c = i;
+    
+    while (c > 0 && arr[c] > arr[c-1]) {
+      swap(arr, c, c-1);
+      swap(linkedArr, c, c-1);
+      c -= 1;
+    }
+  }
+}
+
+void swap(int[] arr, int i1, int i2) {
+  int temp = arr[i1];
+  arr[i1] = arr[i2];
+  arr[i2] = temp;
+}
+
+void swap(String[] arr, int i1, int i2) {
+  String temp = arr[i1];
+  arr[i1] = arr[i2];
+  arr[i2] = temp;
 }
 
 void drawPuzzleGrid() {
