@@ -34,13 +34,11 @@ class Clue {
     textAlign(LEFT, TOP); //<>//
     textSize(clueSize);
     
-    String fullClue;
+    String fullClue = (this.index + 1) + ") " + subjects.get(this.subjectA[0]).get(this.subjectA[1] + 1) + " <" + this.clueType + "> ";
     if (this.subjectB[1] == -1)
-      fullClue = subjects.get(this.subjectA[0]).get(this.subjectA[1] + 1) + " <" + this.clueType + "> #" + this.subjectB[0];
-    else if (this.clueType.equals("at either end") || this.clueType.equals("not at either end"))
-      fullClue = subjects.get(this.subjectA[0]).get(this.subjectA[1] + 1) + " <" + this.clueType + "> ";
-    else
-      fullClue = subjects.get(this.subjectA[0]).get(this.subjectA[1] + 1) + " <" + this.clueType + "> " + subjects.get(this.subjectB[0]).get(this.subjectB[1] + 1);
+      fullClue += "#" + (this.subjectB[0] + 1);
+    else if (!(this.clueType.equals("at either end") || this.clueType.equals("not at either end")))
+      fullClue += subjects.get(this.subjectB[0]).get(this.subjectB[1] + 1);
         
     text(fullClue, cluePadding, cluePadding + scrollOffset + clueSpacing * this.index);
   }

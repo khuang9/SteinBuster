@@ -263,7 +263,7 @@ public void createGUI(){
   selectSubjectA = new GDropList(window1, 10, 172, 90, 80, 3, 10);
   selectSubjectA.setItems(loadStrings("list_321873"), 0);
   selectSubjectA.addEventHandler(this, "selectSubjectA_click");
-  selectClueType = new GDropList(window1, 105, 150, 120, 80, 3, 10);
+  selectClueType = new GDropList(window1, 105, 150, 120, 140, 6, 10);
   selectClueType.setItems(loadStrings("list_313781"), 0);
   selectClueType.addEventHandler(this, "selectClueType_click");
   selectSubjectB = new GDropList(window1, 230, 172, 90, 80, 3, 10);

@@ -9,7 +9,7 @@ import g4p_controls.*;
 //todo: move hat: player: etc to start instead of end//done
 //todo: gui working//done
 //todo: suggestions//done
-//todo: include way of showing all clues
+//todo: include way of showing all clues//done
 //todo: sort based on amount of times used
 //binar sort to find index instead of linear
 //sort: take all unsorted elements out of list, save indices
