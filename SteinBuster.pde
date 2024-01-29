@@ -9,7 +9,15 @@ import g4p_controls.*;
 //todo: move hat: player: etc to start instead of end//done
 //todo: gui working//done
 //todo: suggestions//done
+//todo: include way of showing all clues
 //todo: sort based on amount of times used
+//binar sort to find index instead of linear
+//sort: take all unsorted elements out of list, save indices
+//for each unsorted el: binary search at all blank indices to figure out which island it is in
+//  binar search in island to find which position
+//  insert, shifting least amount of els possible (if shift causes islands to merge, update blank indices)
+//num times used same index as suggestion, when taking sample of suggestions, create two arrays of length sample size, one for suggestions, one for times used
+//add to num times used when typed suggestion found to be in suggestions already
 //todo: save steps in array, make step class, in draw() animate steps[step], step+=1
 int n = 0;//4;//number of rows, number of columns, and number of options
 int m = 0;//5;
@@ -303,6 +311,36 @@ void printResult() {
 }
 //todo: bind enter key to enter button event//nvm, unless can figure out how to know which button should be bound to enter key (know which textbox selected)
 void draw() {
+  if (showClues) {
+    background(0);
+    
+    strokeWeight(0);
+    fill(170);
+    rect(785, 0, 15, height);
+    
+    
+    fill(100);
+    float scrollBarY1 = height * -scrollOffset/listLength();
+    float scrollBarY2 = height * (-scrollOffset + height)/listLength();
+    rect(785, scrollBarY1, 15, scrollBarY2 - scrollBarY1);
+    strokeWeight(1);
+    
+    fill(255);
+    
+    
+    for (int i = -scrollOffset/clueSpacing; i < numClues; i++) { //<>//
+      Clue cl = initClues.get(i);
+      
+      cl.display();
+      
+      if (cluePadding + scrollOffset + clueSpacing * cl.index > height)
+        break;
+    }
+      
+    
+      
+    return;
+  }
   //noLoop();
   if (frameCount != 1) {
     solve();

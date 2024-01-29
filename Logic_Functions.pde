@@ -46,8 +46,8 @@ void affirmative(Clue cl, int[] subjA, int[] subjB) {
 }
 
 void negative(Clue cl, int[] subjA, int[] subjB) {
-  if (positionKnown(subjA) && positionKnown(subjB)) {
-    invalid = true; //<>//
+  if (positionKnown(subjA) && positionKnown(subjB) && subjectColumns[subjA[0]][subjA[1]] == subjectColumns[subjB[0]][subjB[1]]) { //<>//
+    invalid = true;
     return;
   }
   

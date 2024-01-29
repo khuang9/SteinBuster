@@ -1,4 +1,4 @@
-/* ========================================================= //<>// //<>// //<>// //<>// //<>//
+/* =========================================================
  * ====                   WARNING                        ===
  * =========================================================
  * The code in this tab has been generated from the GUI form
@@ -104,7 +104,7 @@ public void categorybutton_click1(GButton source, GEvent event) { //_CODE_:categ
 public void selectSubjectA_click(GDropList source, GEvent event) { //_CODE_:selectSubjectA:321873:
   println("selectSubjectA - GDropList >> GEvent." + event + " @ " + millis());
   
-  subjAfield.setText(selectSubjectA.getSelectedText());
+  subjAfield.setText(realWord(selectSubjectA.getSelectedText()));
 } //_CODE_:selectSubjectA:321873:
 
 public void selectClueType_click(GDropList source, GEvent event) { //_CODE_:selectClueType:313781:
@@ -127,7 +127,7 @@ public void selectClueType_click(GDropList source, GEvent event) { //_CODE_:sele
 public void selectSubjectB_click(GDropList source, GEvent event) { //_CODE_:selectSubjectB:449193:
   println("selectSubjectB - GDropList >> GEvent." + event + " @ " + millis());
   
-  subjBfield.setText(selectSubjectB.getSelectedText());
+  subjBfield.setText(realWord(selectSubjectB.getSelectedText()));
 } //_CODE_:selectSubjectB:449193:
 
 public void button3_click1(GButton source, GEvent event) { //_CODE_:button3:480002:
@@ -165,6 +165,8 @@ public void checkbox1_clicked1(GCheckbox source, GEvent event) { //_CODE_:checkb
 
 public void button4_click1(GButton source, GEvent event) { //_CODE_:button4:982509:
   println("button4 - GButton >> GEvent." + event + " @ " + millis());
+  showClues = false;
+  
   initialize();
   
   checks = 0;
@@ -248,7 +250,7 @@ public void createGUI(){
   optionbutton = new GButton(window1, 270, 75, 44, 21);
   optionbutton.setText("Enter");
   optionbutton.addEventHandler(this, "optionbutton_click1");
-  selectCategory = new GDropList(window1, 15, 75, 90, 80, 3, 10);
+  selectCategory = new GDropList(window1, 10, 75, 90, 80, 3, 10);
   selectCategory.setItems(loadStrings("list_866543"), 0);
   selectCategory.addEventHandler(this, "categories_click");
   categoryfield = new GTextField(window1, 140, 6, 120, 30, G4P.SCROLLBARS_HORIZONTAL_ONLY);
@@ -258,13 +260,13 @@ public void createGUI(){
   categorybutton = new GButton(window1, 270, 6, 44, 21);
   categorybutton.setText("Enter");
   categorybutton.addEventHandler(this, "categorybutton_click1");
-  selectSubjectA = new GDropList(window1, 15, 172, 90, 80, 3, 10);
+  selectSubjectA = new GDropList(window1, 10, 172, 90, 80, 3, 10);
   selectSubjectA.setItems(loadStrings("list_321873"), 0);
   selectSubjectA.addEventHandler(this, "selectSubjectA_click");
-  selectClueType = new GDropList(window1, 110, 150, 110, 80, 3, 10);
+  selectClueType = new GDropList(window1, 105, 150, 120, 80, 3, 10);
   selectClueType.setItems(loadStrings("list_313781"), 0);
   selectClueType.addEventHandler(this, "selectClueType_click");
-  selectSubjectB = new GDropList(window1, 225, 172, 90, 80, 3, 10);
+  selectSubjectB = new GDropList(window1, 230, 172, 90, 80, 3, 10);
   selectSubjectB.setItems(loadStrings("list_449193"), 0);
   selectSubjectB.addEventHandler(this, "selectSubjectB_click");
   button3 = new GButton(window1, 330, 150, 60, 21);
@@ -282,7 +284,7 @@ public void createGUI(){
   label1.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
   label1.setText("Animation Speed");
   label1.setOpaque(false);
-  checkbox1 = new GCheckbox(window1, 7, 6, 120, 20);
+  checkbox1 = new GCheckbox(window1, 10, 6, 120, 20);
   checkbox1.setIconAlign(GAlign.LEFT, GAlign.MIDDLE);
   checkbox1.setText("Position Matters");
   checkbox1.setOpaque(false);
@@ -304,10 +306,10 @@ public void createGUI(){
   optsugg = new GDropList(window1, 140, 107, 90, 80, 3, 10);
   optsugg.setItems(loadStrings("list_668932"), 0);
   optsugg.addEventHandler(this, "optsugg_click3");
-  subjAfield = new GTextField(window1, 15, 150, 90, 20, G4P.SCROLLBARS_NONE);
+  subjAfield = new GTextField(window1, 10, 150, 90, 20, G4P.SCROLLBARS_NONE);
   subjAfield.setOpaque(true);
   subjAfield.addEventHandler(this, "subjAfield_change1");
-  subjBfield = new GTextField(window1, 225, 150, 90, 20, G4P.SCROLLBARS_NONE);
+  subjBfield = new GTextField(window1, 230, 150, 90, 20, G4P.SCROLLBARS_NONE);
   subjBfield.setOpaque(true);
   subjBfield.addEventHandler(this, "subjBfield_change1");
   window1.loop();
