@@ -1,2 +1,1 @@
-jim
-monkey
+blue,jim,monkey,pink,red,white,yellow

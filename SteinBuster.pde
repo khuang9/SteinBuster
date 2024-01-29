@@ -1,6 +1,6 @@
 import g4p_controls.*;
 
-//todo: if clueused, check if anything can be confirmed (if any only has one poss left, use subjectnumpossibilities)
+//todo: if clueused, check if anything can be confirmed (if any only has one poss left, use subjectnumpossibilities)//done
 //check after: negative, not at position, not at either end, not next to, any left of, any right of
 //or just check when stuck
 //todo: save initial state//done
@@ -8,7 +8,8 @@ import g4p_controls.*;
 //todo: m dimension//done
 //todo: move hat: player: etc to start instead of end//done
 //todo: gui working//done
-//todo: suggestions
+//todo: suggestions//done
+//todo: sort based on amount of times used
 //todo: save steps in array, make step class, in draw() animate steps[step], step+=1
 int n = 0;//4;//number of rows, number of columns, and number of options
 int m = 0;//5;
@@ -43,8 +44,8 @@ String[] optSuggestions;
 ArrayList<String> positions = new ArrayList<String>();
 
 boolean invalid = false;//invalid reset to false every time a new guess is made
-// todo: check if invalid after every clue process, if so, break
-//todo: store suggestions in text file
+// todo: check if invalid after every clue process, if so, break//done
+//todo: store suggestions in text file//done
 
 boolean solved = false;
 
@@ -52,7 +53,7 @@ boolean solved = false;
 class Function {
   void call() {}
 }
-// todo: binary search, insertion sort for category/option suggestions
+// todo: binary search,//done insertion sort for category/option suggestions//not done
 // search to find place in list based on letters typed and add new suggestion into right place
 // sort relevant suggestions by times used
 //todo: if time, animate step by step process (animation speed slider), would have to show ones eliminated (in top corner, first letter with a red X if eliminated)
@@ -68,11 +69,13 @@ int cellWidth;
 int cellHeight;
 
 ArrayList<String> filler = new ArrayList<String>();
-
+String[] t;
 void setup() {
-  categSuggestions = loadStrings("SuggestionData/categories.txt");
-  optSuggestions = loadStrings("SuggestionData/options.txt");
-  
+  categSuggestions = split(loadStrings("SuggestionData/categories.txt")[0], ",");
+  optSuggestions = split(loadStrings("SuggestionData/options.txt")[0], ",");
+  //saveSuggestions();
+  //t = split(loadStrings("SuggestionData/test.txt")[0], ",");
+  //printArray(t);
   createGUI();
   
   //ArrayList<String> filler = new ArrayList<String>();
@@ -129,10 +132,10 @@ void setup() {
   //    initGridNumPossibilities[i][j] = m;
   //  }
   //}
-  ////todo: keep initial states, so can revert every new solve
+  ////todo: keep initial states, so can revert every new solve//done
   ////todo: animate steps
-  //initClues.add(new Clue(new int[]{3, 3}, "at position", new int[]{2, -1}));//todo: gives index error when position doesn't matter
-  //initClues.add(new Clue(new int[]{2, 0}, "at position", new int[]{3, -1}));//todo: gives index error when position doesn't matter
+  //initClues.add(new Clue(new int[]{3, 3}, "at position", new int[]{2, -1}));//todo: gives index error when position doesn't matter//done
+  //initClues.add(new Clue(new int[]{2, 0}, "at position", new int[]{3, -1}));//todo: gives index error when position doesn't matter//done
   //initClues.add(new Clue(new int[]{0, 1}, "at position", new int[]{2, -1}));
   //initClues.add(new Clue(new int[]{1, 2}, "next to", new int[]{0, 3}));
   //initClues.add(new Clue(new int[]{1, 2}, "immediately left of", new int[]{0, 1}));
@@ -340,6 +343,7 @@ void draw() {
       textSize(40);
       text("UNSOLVABLE", width/2, height/2);
     }
+    saveSuggestions();
     resetState();
     saveState();
     //for (Clue cl : clues)
@@ -353,7 +357,7 @@ void draw() {
 //}
 // todo: add puzzle class
 // todo: draw screen refreshing
-//todo: gui
+//todo: gui//done
 //todo: if time, add feature for figuring out how many solutions there are
 void keyPressed() {
   if (keyCode == ENTER)
@@ -490,7 +494,7 @@ void solve() {
       
       //drawPuzzleGrid(); //<>//
       //drawPuzzleState();
-      //todo: print out grid state instead
+      //todo: animate printing out grid state instead
       String currentClue;
       if (cl.subjectB[1] == -1)
         currentClue = subjects.get(cl.subjectA[0]).get(cl.subjectA[1] + 1) + " <" + cl.clueType + "> #" + cl.subjectB[0];
@@ -505,7 +509,7 @@ void solve() {
       //text(currentClue, width/2, 20);
       //delay(1000);
       
-      //todo: add way to check if nothing amounted from clue
+      //todo: add way to check if nothing amounted from clue//done
       if (invalid) {
         revertState();  // Revert to prev state
         invalid = false;

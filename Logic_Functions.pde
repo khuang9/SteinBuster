@@ -4,12 +4,12 @@ boolean cluesUsed = false;
 void affirmative(Clue cl, int[] subjA, int[] subjB) {
   if (positionKnown(subjA)) { //<>//
     setOption(subjB[0], subjectColumns[subjA[0]][subjA[1]], subjB[1]);//indices
-    cl.hide();//todo: hide clue
+    cl.hide();
     // No numCluesUsed += 1 because already done in cl.hide()
   }
   else if (positionKnown(subjB)) { //<>//
     setOption(subjA[0], subjectColumns[subjB[0]][subjB[1]], subjA[1]);//indices
-    cl.hide();//todo: hide clue
+    cl.hide();
   }
     
   else {
@@ -36,7 +36,7 @@ void affirmative(Clue cl, int[] subjA, int[] subjB) {
     if (pairsFound == 1) {
       setOption(subjA[0], pairCol, subjA[1]);
       setOption(subjB[0], pairCol, subjB[1]);
-      cl.hide();//todo: hide clue
+      cl.hide();
     }
     //else if (cluesUsed) {
     //  //numCluesUsed += 1;
@@ -53,11 +53,11 @@ void negative(Clue cl, int[] subjA, int[] subjB) {
   
   if (positionKnown(subjA)) {
     removeOption(subjB[0], subjectColumns[subjA[0]][subjA[1]], subjB[1]);//indices
-    cl.hide();//todo: hide clue
+    cl.hide();
   }
   else if (positionKnown(subjB)) {
     removeOption(subjA[0], subjectColumns[subjB[0]][subjB[1]], subjA[1]);//indices
-    cl.hide();//todo: hide clue
+    cl.hide();
   }
 }
 
@@ -69,25 +69,25 @@ void atPosition(Clue cl, int[] subjA, int[] subjB, int type) {
   else  // at position
     setOption(subjA[0], subjB[0], subjA[1]);//subjB[0] will be column index instead of what it usually is
   
-  cl.hide();//todo: hide clue
+  cl.hide();
 }
 
 void atEitherEnd(Clue cl, int[] subj, int type) {
   if (type == 0) {  // not at either end //<>//
     removeOption(subj[0], 0, subj[1]);  // Remove option from first grid in row
     removeOption(subj[0], m - 1, subj[1]);  // Remove option from last grid in row
-    cl.hide();//todo: hide clue
+    cl.hide();
   }
   
   else {  // at either end
     if (optionsPossible[subj[0]][0][subj[1]] == 0) {//bools
       setOption(subj[0], m - 1, subj[1]);
-      cl.hide();//todo: hide clue
+      cl.hide();
     }
     
     else if (optionsPossible[subj[0]][m - 1][subj[1]] == 0) {//bools
       setOption(subj[0], 0, subj[1]);
-      cl.hide();//todo: hide clue
+      cl.hide();
     }
     
     else {
@@ -146,7 +146,7 @@ void nextTo(Clue cl, int[] subjA, int[] subjB, int type) {
     if (abs(subjectColumns[subjA[0]][subjA[1]] - subjectColumns[subjB[0]][subjB[1]]) != 1)//indices
       invalid = true;
     else
-      cl.hide();//todo hide clue;
+      cl.hide();
     return;
   }
     
@@ -240,7 +240,7 @@ void leftOf(Clue cl, int[] subjA, int[] subjB, int type) {
     if (subjectColumns[subjA[0]][subjA[1]] >= subjectColumns[subjB[0]][subjB[1]])//indices
       invalid = true;
     else
-      cl.hide();//todo hide clue;
+      cl.hide();
     return;
   }
   
@@ -301,7 +301,7 @@ void rightOf(Clue cl, int[] subjA, int[] subjB, int type) {
     if (subjectColumns[subjA[0]][subjA[1]] <= subjectColumns[subjB[0]][subjB[1]])//indices
       invalid = true;
     else
-      cl.hide();//todo hide clue
+      cl.hide();
     return;
   }
   

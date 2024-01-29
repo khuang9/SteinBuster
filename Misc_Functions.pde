@@ -150,3 +150,16 @@ void resetState() {
   copyArray(initClues, clues);
   numCluesFinished = 0;
 }
+
+void saveSuggestions() {
+  PrintWriter categs = createWriter("SuggestionData/categories.txt");
+  PrintWriter opts = createWriter("SuggestionData/options.txt");
+  
+  categs.println(join(categSuggestions, ","));
+  categs.flush();
+  categs.close();
+  printArray(optSuggestions);
+  opts.println(join(optSuggestions, ","));
+  opts.flush();
+  opts.close();
+}
