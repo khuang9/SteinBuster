@@ -7,8 +7,8 @@ import g4p_controls.*;
 //todo: if position doesn't matter, just ignore any position clues//done
 //todo: m dimension//done
 //todo: move hat: player: etc to start instead of end//done
-//todo: gui working
-//todo: suggestions, textbox class
+//todo: gui working//done
+//todo: suggestions
 //todo: save steps in array, make step class, in draw() animate steps[step], step+=1
 int n = 0;//4;//number of rows, number of columns, and number of options
 int m = 0;//5;
@@ -37,7 +37,9 @@ int prevNumCluesFinished = 0;
 //ArrayList<ArrayList<String>> subjects = new String[n][m+1];
 ArrayList<ArrayList<String>> subjects = new ArrayList<ArrayList<String>>();
 ArrayList<String> categories = new ArrayList<String>();
-ArrayList<String> options = new ArrayList<String>();
+String[] categSuggestions;
+String[] options = new String[0];
+String[] optSuggestions;
 ArrayList<String> positions = new ArrayList<String>();
 
 boolean invalid = false;//invalid reset to false every time a new guess is made
@@ -65,16 +67,23 @@ int gridHeight;
 int cellWidth;
 int cellHeight;
 
+ArrayList<String> filler = new ArrayList<String>();
+
 void setup() {
+  categSuggestions = loadStrings("SuggestionData/categories.txt");
+  optSuggestions = loadStrings("SuggestionData/options.txt");
+  
   createGUI();
   
-  ArrayList<String> filler = new ArrayList<String>();
+  //ArrayList<String> filler = new ArrayList<String>();
   filler.add("-");
   String[] clueTypes = {"affirmative", "negative", "at position", "not at position", "at either end", "not at either end", "next to", "not next to", "immediately left of", "somewhere left of", "immediately right of", "somewhere right of"};
   selectCategory.setItems(filler, 0);
   selectSubjectA.setItems(filler, 0);
   selectSubjectB.setItems(filler, 0);
   selectClueType.setItems(clueTypes, 0);
+  categsugg.setItems(filler, 0);
+  optsugg.setItems(filler, 0);
   
   size(800, 600);
   //background(0);
@@ -351,6 +360,73 @@ void keyPressed() {
     solve();
 }
 
+boolean alphabeticallyInFront(String word, String comparedTo) {
+  int minLength = min(word.length(), comparedTo.length());
+  for (int letter = 0; letter < minLength; letter++) {
+    if (int(word.charAt(letter)) < int(comparedTo.charAt(letter)))
+      return true;
+    else if (int(word.charAt(letter)) > int(comparedTo.charAt(letter)))
+      return false;
+  }
+  
+  return word.length() <= comparedTo.length();
+}
+
+String realWord(String word) {
+  int brackIndex = word.indexOf(")");
+  
+  if (brackIndex == -1)
+    return word;
+  else
+    return word.substring(brackIndex + 2);
+}
+//todo: save new suggestions to file
+int binarySearch(String[] arr, String word, int start, int end) {
+  word = trim(word);
+  
+  if (start >= end) {
+    if (end == -1)
+      return 0;
+    else if (alphabeticallyInFront(word, realWord(arr[end])))
+      return end;
+    else
+      return end + 1;
+  }
+  
+  
+  int mid = (start + end)/2;
+  if (alphabeticallyInFront(word, realWord(arr[mid])))
+    return binarySearch(arr, word, start, mid - 1);
+  else
+    return binarySearch(arr, word, mid + 1, end);
+}
+
+
+String[] addString(String[] arr, String word) {
+  if (in(arr, word))
+    return arr;
+    
+  int arrSize = arr.length;
+  
+  if (arrSize == 0)
+    return append(arr, word);
+   
+  int addIndex = binarySearch(arr, realWord(word), 0, arrSize - 1);
+  
+  arr = append(arr, arr[arrSize - 1]);
+  
+  for (int i = arrSize - 1; i > addIndex; i--)
+    arr[i] = arr[i-1];
+    
+  arr[addIndex] = word;
+  
+  return arr;
+}
+
+void insertionSort(ArrayList<String[]> arr) {
+  //insertion sort based on times chosen
+  //String[0] is the string, String[1] is the times chosen
+}
 
 void drawPuzzleGrid() {
   background(0);

@@ -84,7 +84,7 @@ void copyArray(ArrayList<Clue> copyFrom, ArrayList<Clue> copyTo) {
 
 
 int[] leastOptionsSquareIndices() {
-  int minOptions = m + 1; //<>//
+  int minOptions = m + 1;
   int minRow = n;
   int minCol = m;
   
@@ -113,6 +113,15 @@ int indexInArray(int[] arr, int el) {
   }
   
   return -1;
+}
+
+boolean in(String[] arr, String el) {
+  for (String s : arr) {
+    if (s.equals(el))
+      return true;
+  }
+  
+  return false;
 }
 
 void saveState() {

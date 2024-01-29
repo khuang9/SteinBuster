@@ -20,6 +20,14 @@ synchronized public void win_draw2(PApplet appc, GWinData data) { //_CODE_:windo
 
 public void optionfield_change1(GTextField source, GEvent event) { //_CODE_:optionfield:899112:
   println("textfield2 - GTextField >> GEvent." + event + " @ " + millis());
+  
+  int start = binarySearch(optSuggestions, optionfield.getText(), 0, optSuggestions.length - 1);
+  int end = binarySearch(optSuggestions, optionfield.getText() + "{", 0, optSuggestions.length - 1);  // '{' has ascii 123 vs 'z' ascii 122
+  
+  if (start == end)
+    optsugg.setItems(filler, 0);
+  else
+    optsugg.setItems(subset(optSuggestions, start, end-start), 0);
 } //_CODE_:optionfield:899112:
 
 public void optionbutton_click1(GButton source, GEvent event) { //_CODE_:optionbutton:609713:
@@ -33,13 +41,34 @@ public void optionbutton_click1(GButton source, GEvent event) { //_CODE_:optionb
   }
     
   subjects.get(categIndex).add(optionfield.getText());
-  options.add(categIndex + 1 + "." + categOptions + ") " + optionfield.getText());
-  selectSubjectA.setItems(options, 0);
+  //options.add(categIndex + 1 + "." + categOptions + ") " + optionfield.getText());
+  options = addString(options, categIndex + 1 + "." + categOptions + ") " + optionfield.getText());
+  optSuggestions = addString(optSuggestions, optionfield.getText());
   
+  
+
+  int start = binarySearch(options, subjAfield.getText(), 0, options.length - 1);
+  int end = binarySearch(options, subjAfield.getText() + "{", 0, options.length - 1);  // '{' has ascii 123 vs 'z' ascii 122
+  
+  if (start == end)
+    selectSubjectA.setItems(filler, 0);
+  else
+    selectSubjectA.setItems(subset(options, start, end-start), 0);
+
   if (selectClueType.getSelectedText().equals("at position") || selectClueType.getSelectedText().equals("not at position"))
     selectSubjectB.setItems(positions, 0);
-  else
-    selectSubjectB.setItems(options, 0);
+  else {
+    start = binarySearch(options, subjBfield.getText(), 0, options.length - 1);
+    end = binarySearch(options, subjBfield.getText() + "{", 0, options.length - 1);  // '{' has ascii 123 vs 'z' ascii 122
+    
+    if (start == end)
+      selectSubjectB.setItems(filler, 0);
+    else
+      selectSubjectB.setItems(subset(options, start, end-start), 0);
+    
+  }
+    
+  optionfield.setText("");
 } //_CODE_:optionbutton:609713:
 
 public void categories_click(GDropList source, GEvent event) { //_CODE_:selectCategory:866543:
@@ -48,6 +77,14 @@ public void categories_click(GDropList source, GEvent event) { //_CODE_:selectCa
 
 public void categoryfield_change1(GTextField source, GEvent event) { //_CODE_:categoryfield:602102:
   println("textfield3 - GTextField >> GEvent." + event + " @ " + millis());
+  
+  int start = binarySearch(categSuggestions, categoryfield.getText(), 0, categSuggestions.length - 1);
+  int end = binarySearch(categSuggestions, categoryfield.getText() + "{", 0, categSuggestions.length - 1);  // '{' has ascii 123 vs 'z' ascii 122
+  
+  if (start == end)
+    categsugg.setItems(filler, 0);
+  else
+    categsugg.setItems(subset(categSuggestions, start, end-start), 0);
 } //_CODE_:categoryfield:602102:
 
 public void categorybutton_click1(GButton source, GEvent event) { //_CODE_:categorybutton:627222:
@@ -58,23 +95,39 @@ public void categorybutton_click1(GButton source, GEvent event) { //_CODE_:categ
   subjects.get(n-1).add(categoryfield.getText() + ":");
   
   categories.add(n + ") " + categoryfield.getText());
+  categSuggestions = addString(categSuggestions, categoryfield.getText());
   selectCategory.setItems(categories, 0);
+  
+  categoryfield.setText("");
 } //_CODE_:categorybutton:627222:
 
-public void dropList1_click1(GDropList source, GEvent event) { //_CODE_:selectSubjectA:321873:
+public void selectSubjectA_click(GDropList source, GEvent event) { //_CODE_:selectSubjectA:321873:
   println("selectSubjectA - GDropList >> GEvent." + event + " @ " + millis());
+  
+  subjAfield.setText(selectSubjectA.getSelectedText());
 } //_CODE_:selectSubjectA:321873:
 
-public void dropList1_click2(GDropList source, GEvent event) { //_CODE_:selectClueType:313781:
+public void selectClueType_click(GDropList source, GEvent event) { //_CODE_:selectClueType:313781:
   println("selectClueType - GDropList >> GEvent." + event + " @ " + millis());
   if (selectClueType.getSelectedText().equals("at position") || selectClueType.getSelectedText().equals("not at position"))
     selectSubjectB.setItems(positions, 0);
-  else
-    selectSubjectB.setItems(options, 0);
+  else {
+    int start = binarySearch(options, subjBfield.getText(), 0, options.length - 1);
+    int end = binarySearch(options, subjBfield.getText() + "{", 0, options.length - 1);  // '{' has ascii 123 vs 'z' ascii 122
+    
+    if (start == end)
+      selectSubjectB.setItems(filler, 0);
+    else
+      selectSubjectB.setItems(subset(options, start, end-start), 0);
+      
+    
+  }
 } //_CODE_:selectClueType:313781:
 
 public void selectSubjectB_click(GDropList source, GEvent event) { //_CODE_:selectSubjectB:449193:
   println("selectSubjectB - GDropList >> GEvent." + event + " @ " + millis());
+  
+  subjBfield.setText(selectSubjectB.getSelectedText());
 } //_CODE_:selectSubjectB:449193:
 
 public void button3_click1(GButton source, GEvent event) { //_CODE_:button3:480002:
@@ -96,6 +149,9 @@ public void button3_click1(GButton source, GEvent event) { //_CODE_:button3:4800
     subjB = new int[]{int(B.substring(0, dotIndexB)) - 1, int(B.substring(dotIndexB + 1, brackIndexB)) - 1};
     
   initClues.add(new Clue(subjA, selectClueType.getSelectedText(), subjB));
+  
+  subjAfield.setText("");
+  subjBfield.setText("");
 } //_CODE_:button3:480002:
 
 public void slider1_change1(GSlider source, GEvent event) { //_CODE_:slider1:696747:
@@ -135,6 +191,43 @@ public void gridupdate_click1(GButton source, GEvent event) { //_CODE_:gridupdat
   initialize();
 } //_CODE_:gridupdate:652888:
 
+public void categsugg_click3(GDropList source, GEvent event) { //_CODE_:categsugg:954426:
+  println("categsugg - GDropList >> GEvent." + event + " @ " + millis());
+  
+  categoryfield.setText(categsugg.getSelectedText());
+  println("A");
+} //_CODE_:categsugg:954426:
+
+public void optsugg_click3(GDropList source, GEvent event) { //_CODE_:optsugg:668932:
+  println("optsugg - GDropList >> GEvent." + event + " @ " + millis());
+  
+  optionfield.setText(optsugg.getSelectedText());
+} //_CODE_:optsugg:668932:
+
+public void subjAfield_change1(GTextField source, GEvent event) { //_CODE_:subjAfield:305438:
+  println("subjAfield - GTextField >> GEvent." + event + " @ " + millis());
+
+  int start = binarySearch(options, subjAfield.getText(), 0, options.length - 1);
+  int end = binarySearch(options, subjAfield.getText() + "{", 0, options.length - 1);  // '{' has ascii 123 vs 'z' ascii 122
+  
+  if (start == end)
+    selectSubjectA.setItems(filler, 0);
+  else
+    selectSubjectA.setItems(subset(options, start, end-start), 0);
+} //_CODE_:subjAfield:305438:
+
+public void subjBfield_change1(GTextField source, GEvent event) { //_CODE_:subjBfield:531472:
+  println("subjBfield - GTextField >> GEvent." + event + " @ " + millis());
+
+  int start = binarySearch(options, subjBfield.getText(), 0, options.length - 1);
+  int end = binarySearch(options, subjBfield.getText() + "{", 0, options.length - 1);  // '{' has ascii 123 vs 'z' ascii 122
+  
+  if (start == end)
+    selectSubjectB.setItems(filler, 0);
+  else
+    selectSubjectB.setItems(subset(options, start, end-start), 0);
+} //_CODE_:subjBfield:531472:
+
 
 
 // Create all the GUI controls. 
@@ -158,20 +251,20 @@ public void createGUI(){
   selectCategory = new GDropList(window1, 15, 75, 90, 80, 3, 10);
   selectCategory.setItems(loadStrings("list_866543"), 0);
   selectCategory.addEventHandler(this, "categories_click");
-  categoryfield = new GTextField(window1, 140, 20, 120, 30, G4P.SCROLLBARS_HORIZONTAL_ONLY);
+  categoryfield = new GTextField(window1, 140, 6, 120, 30, G4P.SCROLLBARS_HORIZONTAL_ONLY);
   categoryfield.setPromptText("Enter category");
   categoryfield.setOpaque(true);
   categoryfield.addEventHandler(this, "categoryfield_change1");
-  categorybutton = new GButton(window1, 270, 20, 44, 21);
+  categorybutton = new GButton(window1, 270, 6, 44, 21);
   categorybutton.setText("Enter");
   categorybutton.addEventHandler(this, "categorybutton_click1");
-  selectSubjectA = new GDropList(window1, 15, 150, 90, 80, 3, 10);
+  selectSubjectA = new GDropList(window1, 15, 172, 90, 80, 3, 10);
   selectSubjectA.setItems(loadStrings("list_321873"), 0);
-  selectSubjectA.addEventHandler(this, "dropList1_click1");
+  selectSubjectA.addEventHandler(this, "selectSubjectA_click");
   selectClueType = new GDropList(window1, 110, 150, 110, 80, 3, 10);
   selectClueType.setItems(loadStrings("list_313781"), 0);
-  selectClueType.addEventHandler(this, "dropList1_click2");
-  selectSubjectB = new GDropList(window1, 225, 150, 90, 80, 3, 10);
+  selectClueType.addEventHandler(this, "selectClueType_click");
+  selectSubjectB = new GDropList(window1, 225, 172, 90, 80, 3, 10);
   selectSubjectB.setItems(loadStrings("list_449193"), 0);
   selectSubjectB.addEventHandler(this, "selectSubjectB_click");
   button3 = new GButton(window1, 330, 150, 60, 21);
@@ -205,6 +298,18 @@ public void createGUI(){
   gridupdate = new GButton(window1, 310, 219, 80, 30);
   gridupdate.setText("Update Puzzle");
   gridupdate.addEventHandler(this, "gridupdate_click1");
+  categsugg = new GDropList(window1, 140, 38, 90, 80, 3, 10);
+  categsugg.setItems(loadStrings("list_954426"), 0);
+  categsugg.addEventHandler(this, "categsugg_click3");
+  optsugg = new GDropList(window1, 140, 107, 90, 80, 3, 10);
+  optsugg.setItems(loadStrings("list_668932"), 0);
+  optsugg.addEventHandler(this, "optsugg_click3");
+  subjAfield = new GTextField(window1, 15, 150, 90, 20, G4P.SCROLLBARS_NONE);
+  subjAfield.setOpaque(true);
+  subjAfield.addEventHandler(this, "subjAfield_change1");
+  subjBfield = new GTextField(window1, 225, 150, 90, 20, G4P.SCROLLBARS_NONE);
+  subjBfield.setOpaque(true);
+  subjBfield.addEventHandler(this, "subjBfield_change1");
   window1.loop();
 }
 
@@ -226,3 +331,7 @@ GCheckbox checkbox1;
 GButton button4; 
 GCheckbox checkbox2; 
 GButton gridupdate; 
+GDropList categsugg; 
+GDropList optsugg; 
+GTextField subjAfield; 
+GTextField subjBfield; 

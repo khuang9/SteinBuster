@@ -2,12 +2,12 @@ boolean cluesUsed = false;
 //int numCluesUsed = 0;
 
 void affirmative(Clue cl, int[] subjA, int[] subjB) {
-  if (positionKnown(subjA)) {
+  if (positionKnown(subjA)) { //<>//
     setOption(subjB[0], subjectColumns[subjA[0]][subjA[1]], subjB[1]);//indices
     cl.hide();//todo: hide clue
     // No numCluesUsed += 1 because already done in cl.hide()
   }
-  else if (positionKnown(subjB)) {
+  else if (positionKnown(subjB)) { //<>//
     setOption(subjA[0], subjectColumns[subjB[0]][subjB[1]], subjA[1]);//indices
     cl.hide();//todo: hide clue
   }
