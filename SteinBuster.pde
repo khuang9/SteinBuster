@@ -10,7 +10,7 @@ import g4p_controls.*;
 //todo: gui working//done
 //todo: suggestions//done
 //todo: include way of showing all clues//done
-//todo: sort based on amount of times used
+//todo: sort based on amount of times used//done
 //binar sort to find index instead of linear
 //sort: take all unsorted elements out of list, save indices
 //for each unsorted el: binary search at all blank indices to figure out which island it is in
@@ -426,9 +426,9 @@ String realWord(String word) {
   else
     return word.substring(brackIndex + 2);
 }
-//todo: save new suggestions to file
+//todo: save new suggestions to file//done
 int binarySearch(String[] arr, String word, int start, int end) {
-  word = trim(word);
+  word = trim(word); //<>//
   
   if (start >= end) {
     if (end == -1)
@@ -441,7 +441,9 @@ int binarySearch(String[] arr, String word, int start, int end) {
   
   
   int mid = (start + end)/2;
-  if (alphabeticallyInFront(word, realWord(arr[mid])))
+  if (word.equals(realWord(arr[mid])))
+    return mid;
+  else if (alphabeticallyInFront(word, realWord(arr[mid])))
     return binarySearch(arr, word, start, mid - 1);
   else
     return binarySearch(arr, word, mid + 1, end);
@@ -449,9 +451,9 @@ int binarySearch(String[] arr, String word, int start, int end) {
 
 
 String[] addString(String[] arr, int[] linkedArr, String word) {
-  int wordIndex = index(arr, word);
+  int wordIndex = index(arr, word); //<>//
   
-  if (wordIndex != -1) { //<>//
+  if (wordIndex != -1) {
     linkedArr[wordIndex] += 1;
     return arr;
   }

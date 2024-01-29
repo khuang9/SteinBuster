@@ -37,7 +37,7 @@ public void optionfield_change1(GTextField source, GEvent event) { //_CODE_:opti
 } //_CODE_:optionfield:899112:
 
 public void optionbutton_click1(GButton source, GEvent event) { //_CODE_:optionbutton:609713:
-  println("button1 - GButton >> GEvent." + event + " @ " + millis());
+  println("button1 - GButton >> GEvent." + event + " @ " + millis()); //<>//
   int categIndex = int(selectCategory.getSelectedText().substring(0, selectCategory.getSelectedText().indexOf(")"))) - 1;
   println(selectCategory.getSelectedText(), categIndex);
   int categOptions = subjects.get(categIndex).size();

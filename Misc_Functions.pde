@@ -114,14 +114,25 @@ int indexInArray(int[] arr, int el) {
   
   return -1;
 }
-//todo: use binary search in this
+//todo: use binary search in this//done
 int index(String[] arr, String el) {
-  for (int i = 0; i < arr.length; i++) {
-    if (arr[i].equals(el))
-      return i;
-  }
+  if (arr.length == 0)
+    return -1;
+    
+  el = realWord(el);
   
-  return -1;
+  int elIndex = binarySearch(arr, el, 0, arr.length - 1); //<>//
+  
+  if (arr[elIndex].equals(el))
+    return elIndex;
+  else
+    return -1;
+  //for (int i = 0; i < arr.length; i++) {
+  //  if (arr[i].equals(el))
+  //    return i;
+  //}
+  
+  //return -1;
 }
 
 void saveState() {
