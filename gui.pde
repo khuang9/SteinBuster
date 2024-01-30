@@ -19,12 +19,13 @@ synchronized public void win_draw2(PApplet appc, GWinData data) { //_CODE_:windo
 } //_CODE_:window1:620608:
 
 public void optionfield_change(GTextField source, GEvent event) { //_CODE_:optionfield:899112:
-  int start = binarySearch(optSuggestions, optionfield.getText(), 0, optSuggestions.length - 1);
-  int end = binarySearch(optSuggestions, optionfield.getText() + "{", 0, optSuggestions.length - 1);  // '{' has ascii 123 vs 'z' ascii 122
+  int start = binarySearch(optSuggestions, optionfield.getText(), 0, optSuggestions.length - 1);  // Start index of suggestions sample
+  int end = binarySearch(optSuggestions, optionfield.getText() + "{", 0, optSuggestions.length - 1);  // '{' has ascii 123 vs 'z' ascii 122 (ex: using start marker "ab" and end marker "ab{" would get all words from aba- to abz-)
   
-  if (start == end)
+  if (start == end)  // No suggestions starting with the text entered into the textfield
     optsugg.setItems(filler, 0);
   else {
+    // Set suggestions drop list to contain all suggestions starting with text entered into textfield, sorted by selection frequency
     String[] suggested = subset(optSuggestions, start, end-start);
     int[] freqs = subset(optFrequency, start, end-start);
     
@@ -35,19 +36,24 @@ public void optionfield_change(GTextField source, GEvent event) { //_CODE_:optio
 } //_CODE_:optionfield:899112:
 
 public void optionbutton_click(GButton source, GEvent event) { //_CODE_:optionbutton:609713:
-  int categIndex = int(selectCategory.getSelectedText().substring(0, selectCategory.getSelectedText().indexOf(")"))) - 1;
-  println(selectCategory.getSelectedText(), categIndex);
-  int categOptions = subjects.get(categIndex).size();
+  // Adds an option based on the selected category and text entered into options textfield
+  
+  int categIndex = int(selectCategory.getSelectedText().substring(0, selectCategory.getSelectedText().indexOf(")"))) - 1;  // Index of selected category (also row number)
+  int categOptions = subjects.get(categIndex).size();  // Number of options currently in that category (actually +1 due to the category name taking up index 0)
+  
+  // If current number of options + 1 category name > m, number of options after adding option will > m as well meaning m (max number of columns) will increase
   if (categOptions > m) {
     m = categOptions;
     positions.add(str(m));
   }
     
-  subjects.get(categIndex).add(optionfield.getText());
-  options = addString(options, new int[options.length+1], categIndex + 1 + "." + categOptions + ") " + optionfield.getText());  // Call with placeholder int[] to abide by function parameters
-  if (indexInArray(optSuggestions, optionfield.getText()) == -1)
+  subjects.get(categIndex).add(optionfield.getText());  // Add option name to subjects
+  options = addString(options, new int[options.length+1], categIndex + 1 + "." + categOptions + ") " + optionfield.getText());  // Also add option to alpha-sorted options list (call with placeholder int[] to abide by function parameters)
+  
+  if (indexInArray(optSuggestions, optionfield.getText()) == -1)  // If option is not already in suggestions, expand optFrequency to make room for one more suggestion
     optFrequency = expand(optFrequency, optFrequency.length + 1);
-  optSuggestions = addString(optSuggestions, optFrequency, optionfield.getText());
+    
+  optSuggestions = addString(optSuggestions, optFrequency, optionfield.getText());  // Add new option to suggestions
   
   // Update suggestions in dropdown lists for selecting subject A and B in clue entering section
   int start = binarySearch(options, subjAfield.getText(), 0, options.length - 1);
@@ -72,7 +78,7 @@ public void optionbutton_click(GButton source, GEvent event) { //_CODE_:optionbu
     
   }
     
-  optionfield.setText("");
+  optionfield.setText("");  // Clear text in options textfield (for convenience)
 } //_CODE_:optionbutton:609713:
 
 public void selectCategory_click(GDropList source, GEvent event) { //_CODE_:selectCategory:866543:
@@ -86,6 +92,7 @@ public void categoryfield_change(GTextField source, GEvent event) { //_CODE_:cat
   if (start == end)
     categsugg.setItems(filler, 0);
   else {
+    // Set category suggestions drop list to contain sample suggestions sorted by selection frequency
     String[] suggested = subset(categSuggestions, start, end-start);
     int[] freqs = subset(categFrequency, start, end-start);
     
@@ -96,27 +103,34 @@ public void categoryfield_change(GTextField source, GEvent event) { //_CODE_:cat
 } //_CODE_:categoryfield:602102:
 
 public void categorybutton_click(GButton source, GEvent event) { //_CODE_:categorybutton:627222:
-  n += 1;  // n is number of rows, also number of categories
+  n += 1;  // n is number of rows, also number of categories, increases every time a category is added
   
-  subjects.add(new ArrayList<String>());
-  subjects.get(n-1).add(categoryfield.getText() + ":");
+  subjects.add(new ArrayList<String>());  // new 'row'
+  subjects.get(n-1).add(categoryfield.getText() + ":");  // Add category name into subjects row
   
-  categories.add(n + ") " + categoryfield.getText());
-  if (indexInArray(categSuggestions, categoryfield.getText()) == -1)
+  categories.add(n + ") " + categoryfield.getText());  // Add to categories array as well
+  
+  if (indexInArray(categSuggestions, categoryfield.getText()) == -1)  // If category is not already in suggestions, expand categFrequency to make room for one more suggestion
     categFrequency = expand(categFrequency, categFrequency.length + 1);
-  categSuggestions = addString(categSuggestions, categFrequency, categoryfield.getText());
-  selectCategory.setItems(categories, 0);
+    
+  categSuggestions = addString(categSuggestions, categFrequency, categoryfield.getText());  // Add new category to suggestions
+  selectCategory.setItems(categories, 0);  // Update suggestions drop list contents
   
   categoryfield.setText("");  // Don't need to manually delete everything in textfield before entering something new
 } //_CODE_:categorybutton:627222:
 
 public void selectSubjectA_click(GDropList source, GEvent event) { //_CODE_:selectSubjectA:321873:
-  subjAfield.setText(realWord(selectSubjectA.getSelectedText()));
+  subjAfield.setText(realWord(selectSubjectA.getSelectedText()));  // Autofill
 } //_CODE_:selectSubjectA:321873:
 
 public void selectClueType_click(GDropList source, GEvent event) { //_CODE_:selectClueType:313781:
+  // Update subject B selections based on clue type selected
+  
+  // For at/not at position clues, subject B is integers from 1 to m
   if (selectClueType.getSelectedText().equals("at position") || selectClueType.getSelectedText().equals("not at position"))
     selectSubjectB.setItems(positions, 0);
+    
+  // Otherwise, subject B is subjects starting with whatever letters is entered into the subject B textfield
   else {
     int start = binarySearch(options, subjBfield.getText(), 0, options.length - 1);
     int end = binarySearch(options, subjBfield.getText() + "{", 0, options.length - 1);  // '{' has ascii 123 vs 'z' ascii 122
@@ -125,37 +139,39 @@ public void selectClueType_click(GDropList source, GEvent event) { //_CODE_:sele
       selectSubjectB.setItems(filler, 0);
     else
       selectSubjectB.setItems(subset(options, start, end-start), 0);
-      
-    
   }
 } //_CODE_:selectClueType:313781:
 
 public void selectSubjectB_click(GDropList source, GEvent event) { //_CODE_:selectSubjectB:449193:
-  subjBfield.setText(realWord(selectSubjectB.getSelectedText()));
+  subjBfield.setText(realWord(selectSubjectB.getSelectedText()));  // Autofill
 } //_CODE_:selectSubjectB:449193:
 
-public void button3_click1(GButton source, GEvent event) { //_CODE_:button3:480002:
+public void addClue_click1(GButton source, GEvent event) { //_CODE_:addClue:480002:
   String A = selectSubjectA.getSelectedText();
   String B = selectSubjectB.getSelectedText();
   
+  // Start to dot: row index, dot to bracket: assigned subject index based on order entered by user
   int brackIndexA = A.indexOf(")");
   int dotIndexA = A.indexOf(".");
   int brackIndexB = B.indexOf(")");
   int dotIndexB = B.indexOf(".");
   
+  // {row index, subject index}
   int[] subjA = new int[]{int(A.substring(0, dotIndexA)) - 1, int(A.substring(dotIndexA + 1, brackIndexA)) - 1};
   int[] subjB;
   
   if (selectClueType.getSelectedText().equals("at position") || selectClueType.getSelectedText().equals("not at position"))
-    subjB = new int[]{int(B) - 1, -1};
+    subjB = new int[]{int(B) - 1, -1};  // For position clues, subject B has placeholder -1 at index 1
   else
     subjB = new int[]{int(B.substring(0, dotIndexB)) - 1, int(B.substring(dotIndexB + 1, brackIndexB)) - 1};
     
+  // Add to initClues not clues because initClues is what keeps a record of the initial state of the clues
   initClues.add(new Clue(subjA, selectClueType.getSelectedText(), subjB));
   
+  // Clear textfields
   subjAfield.setText("");
   subjBfield.setText("");
-} //_CODE_:button3:480002:
+} //_CODE_:addClue:480002:
 
 public void slider1_change1(GSlider source, GEvent event) { //_CODE_:slider1:696747:
   println("slider1 - GSlider >> GEvent." + event + " @ " + millis());
@@ -166,30 +182,24 @@ public void toggleSolveMode_clicked(GCheckbox source, GEvent event) { //_CODE_:t
 } //_CODE_:toggleSolveMode:598382:
 
 public void solveButton_click(GButton source, GEvent event) { //_CODE_:solveButton:982509:
-  showClues = false;
+  showClues = false;  // Turn off clues list to show solution
   
-  initialize();
-  
-  checks = 0;
-  guesses = 0;
-  
+  initialize();  // Prepare for solving first
+
+  // When position doesn't matter, subjects of any one row can be set in whatever order when starting the puzzle
   if (!positionMatters) {
     for (int col = 0; col < m; col++)
-      setOption(0, col, col);
+      setOption(0, col, col);  // col as subject index sets the subjects in whatever order they were entered by the user
   }
   
-  loop();  // Initiate looping of draw() which contains solve()
+  solve();  // Find solution (if any)
+  loop();  // Initiate looping of draw() to draw solution
   
 } //_CODE_:solveButton:982509:
 
 public void checkbox2_clicked1(GCheckbox source, GEvent event) { //_CODE_:checkbox2:596463:
   println("checkbox2 - GCheckbox >> GEvent." + event + " @ " + millis());
 } //_CODE_:checkbox2:596463:
-
-public void gridupdate_click(GButton source, GEvent event) { //_CODE_:gridupdate:652888:
-  println("gridupdate - GButton >> GEvent." + event + " @ " + millis());
-  initialize();
-} //_CODE_:gridupdate:652888:
 
 public void categsugg_click(GDropList source, GEvent event) { //_CODE_:categsugg:954426:
   // Suggestion autofill
@@ -202,6 +212,7 @@ public void optsugg_click(GDropList source, GEvent event) { //_CODE_:optsugg:668
 } //_CODE_:optsugg:668932:
 
 public void subjAfield_change(GTextField source, GEvent event) { //_CODE_:subjAfield:305438:
+  // Updates subject A droplist based on text entered into subject A textfield
   int start = binarySearch(options, subjAfield.getText(), 0, options.length - 1);
   int end = binarySearch(options, subjAfield.getText() + "{", 0, options.length - 1);  // '{' has ascii 123 vs 'z' ascii 122
   
@@ -212,6 +223,7 @@ public void subjAfield_change(GTextField source, GEvent event) { //_CODE_:subjAf
 } //_CODE_:subjAfield:305438:
 
 public void subjBfield_change(GTextField source, GEvent event) { //_CODE_:subjBfield:531472:
+  // Updates subject A droplist based on text entered into subject A textfield
   int start = binarySearch(options, subjBfield.getText(), 0, options.length - 1);
   int end = binarySearch(options, subjBfield.getText() + "{", 0, options.length - 1);  // '{' has ascii 123 vs 'z' ascii 122
   
@@ -260,9 +272,9 @@ public void createGUI(){
   selectSubjectB = new GDropList(window1, 230, 172, 90, 80, 3, 10);
   selectSubjectB.setItems(loadStrings("list_449193"), 0);
   selectSubjectB.addEventHandler(this, "selectSubjectB_click");
-  button3 = new GButton(window1, 330, 150, 60, 21);
-  button3.setText("Add clue");
-  button3.addEventHandler(this, "button3_click1");
+  addClue = new GButton(window1, 330, 150, 60, 21);
+  addClue.setText("Add clue");
+  addClue.addEventHandler(this, "addClue_click1");
   slider1 = new GSlider(window1, 15, 235, 200, 47, 10.0);
   slider1.setShowValue(true);
   slider1.setLimits(5, 1, 10);
@@ -288,9 +300,6 @@ public void createGUI(){
   checkbox2.setText("Show Animation");
   checkbox2.setOpaque(false);
   checkbox2.addEventHandler(this, "checkbox2_clicked1");
-  gridupdate = new GButton(window1, 310, 219, 80, 30);
-  gridupdate.setText("Update Puzzle");
-  gridupdate.addEventHandler(this, "gridupdate_click");
   categsugg = new GDropList(window1, 140, 38, 90, 80, 3, 10);
   categsugg.setItems(loadStrings("list_954426"), 0);
   categsugg.addEventHandler(this, "categsugg_click");
@@ -317,13 +326,12 @@ GButton categorybutton;
 GDropList selectSubjectA; 
 GDropList selectClueType; 
 GDropList selectSubjectB; 
-GButton button3; 
+GButton addClue; 
 GSlider slider1; 
 GLabel label1; 
 GCheckbox toggleSolveMode; 
 GButton solveButton; 
 GCheckbox checkbox2; 
-GButton gridupdate; 
 GDropList categsugg; 
 GDropList optsugg; 
 GTextField subjAfield; 

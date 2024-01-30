@@ -1,80 +1,70 @@
 import g4p_controls.*;
 
-//todo: if clueused, check if anything can be confirmed (if any only has one poss left, use subjectnumpossibilities)//done
-//check after: negative, not at position, not at either end, not next to, any left of, any right of
-//or just check when stuck
-//todo: save initial state//done
-//todo: if position doesn't matter, just ignore any position clues//done
-//todo: m dimension//done
-//todo: move hat: player: etc to start instead of end//done
-//todo: gui working//done
-//todo: suggestions//done
-//todo: include way of showing all clues//done
-//todo: sort based on amount of times used//done
-//binar sort to find index instead of linear
-//sort: take all unsorted elements out of list, save indices
-//for each unsorted el: binary search at all blank indices to figure out which island it is in
-//  binar search in island to find which position
-//  insert, shifting least amount of els possible (if shift causes islands to merge, update blank indices)
-//num times used same index as suggestion, when taking sample of suggestions, create two arrays of length sample size, one for suggestions, one for times used
-//add to num times used when typed suggestion found to be in suggestions already
 //todo: save steps in array, make step class, in draw() animate steps[step], step+=1
-int n = 0;//4;//number of rows, number of columns, and number of options
-int m = 0;//5;
-int[][][] optionsPossible;//bools
-int[][][] prevOptionsPossible;
-int[][][] initOptionsPossible;
-int[][] subjectColumns;//indices
-int[][] prevSubjectColumns;
-int[][] initSubjectColumns;
-int[][] subjectNumPossibilities;//num poss for subj
-int[][] prevSubjectNumPossibilities;
-int[][] initSubjectNumPossibilities;
-int[][] gridNumPossibilities;//num poss for grid
-int[][] prevGridNumPossibilities;
-int[][] initGridNumPossibilities;
-ArrayList<Clue> clues = new ArrayList<Clue>();
-ArrayList<Clue> prevClues = new ArrayList<Clue>();
-ArrayList<Clue> initClues = new ArrayList<Clue>();
-int numClues = 0;
+int n = 0;  // Number of rows, also number of categories
+int m = 0;  // Number of columns, also number of options per category
 
-int checks = 0;
-int guesses = 0;
+int[][][] optionsPossible;      // Contains list of 0s and 1s corresponding to each grid cell (0 means subject with that assigned index cannot be put in that cell, 1 means it can be put there)
+int[][][] prevOptionsPossible;  // Stores values from before last guess
+int[][][] initOptionsPossible;  // Stores values from initialization
+int[][] subjectColumns;      // Determined indices of each subject (if undetermined, it will be -1)
+int[][] prevSubjectColumns;  // Stores values from before last guess
+int[][] initSubjectColumns;  // Stores values from initialization
+int[][] subjectNumPossibilities;      // Possible positions for each subject
+int[][] prevSubjectNumPossibilities;  // Stores values from before last guess
+int[][] initSubjectNumPossibilities;  // Stores values from initialization
+int[][] cellNumPossibilities;      // Possible options in each grid cell
+int[][] prevCellNumPossibilities;  // Stores values from before last guess
+int[][] initCellNumPossibilities;  // Stores values from initialization
+ArrayList<Clue> clues = new ArrayList<Clue>();      // Contains all unused/partially used clues
+ArrayList<Clue> prevClues = new ArrayList<Clue>();  // Stores clues from before last guess (some currently used clues may have been unused back then)
+ArrayList<Clue> initClues = new ArrayList<Clue>();  // Stores initial state of clues (contains every clue the user entered in proper order)
 
-boolean positionMatters = false;
-
-int numCluesFinished = 0;
+int numCluesFinished = 0;  // Used clues are not removed from the list, just replaced with used clues from the back of the list
+                           // numCluesFinished keeps track of where to loop up to when checking through all clues
 int prevNumCluesFinished = 0;
+// No initNumCluesFinished needed because it's just 0
 
-ArrayList<ArrayList<String>> subjects = new ArrayList<ArrayList<String>>();
-ArrayList<String> categories = new ArrayList<String>();
-String[] categSuggestions;
-int[] categFrequency;
-String[] options = new String[0];
-String[] optSuggestions;
-int[] optFrequency;
-ArrayList<String> positions = new ArrayList<String>();
+int numClues = 0;  // Length of clues array
 
-boolean invalid = false;//invalid reset to false every time a new guess is made
+int steps = 0;  // Tracks how many logical steps were taken (number of for loop iterations)
+int guesses = 0;  // Tracks how many guesses were made (number of recursive calls)
 
-boolean solved = false;
+boolean positionMatters = false;  // Some types of puzzles have positional clues with only one right answer, some have no positional clues with m! right answers (any permutation of the columns works)
 
+
+ArrayList<ArrayList<String>> subjects = new ArrayList<ArrayList<String>>();  // Stores all subjects entered in rows corresponding to their respective categories
+ArrayList<String> categories = new ArrayList<String>();  // Used to set items of categories drop list for entering options
+String[] categSuggestions;  // Used to set items of suggestions drop down for entering categories
+int[] categFrequency;       // Tracks how many times each suggestion is selected
+String[] options = new String[0];  // Used to set items of subject drop lists for entering clues
+String[] optSuggestions;  // Used to set items of suggestions drop down for entering options
+int[] optFrequency;       // Tracks how many times each suggestion is selected
+ArrayList<String> positions = new ArrayList<String>();  // Contains all position numbers (consective nums from 1 to m)
+
+boolean invalid = false;  // Validity of current puzzle state (invalid resets to false every time a new guess is made, set to true whenever a clue is violated)
+
+boolean solved = false;  // Set to true when valid solution found, set to false after solution displayed
+boolean cluesUsed = false;  // Tracks whether or not any progress was made in an iteration
 
 //todo: if time, animate step by step process (animation speed slider), would have to show ones eliminated (in top corner, first letter with a red X if eliminated)
 
-int gridX1;
-int gridY1;
-int gridX2;
-int gridY2;
+// Edge coords of puzzle grid
+int gridX1 = 100;
+int gridY1 = 50;
+int gridX2 = 750;
+int gridY2 = 550;
 
-int gridWidth;
-int gridHeight;
+// Measurements
+int gridWidth = gridX2 - gridX1;
+int gridHeight = gridY2 - gridY1;
 int cellWidth;
 int cellHeight;
 
-ArrayList<String> filler = new ArrayList<String>();
-String[] t;
+String[] filler = {"-"};  // Prevents drop list nullpointers
+
 void setup() {
+  // Load in file data
   categSuggestions = split(loadStrings("SuggestionData/categories.txt")[0], ",");
   categFrequency = int(split(loadStrings("SuggestionData/categoryFrequency.txt")[0], ","));
   optSuggestions = split(loadStrings("SuggestionData/options.txt")[0], ",");
@@ -82,46 +72,43 @@ void setup() {
 
   createGUI();
   
-  filler.add("-");
+  // Initialize drop lists
   String[] clueTypes = {"affirmative", "negative", "at position", "not at position", "at either end", "not at either end", "next to", "not next to", "immediately left of", "somewhere left of", "immediately right of", "somewhere right of"};
+  selectClueType.setItems(clueTypes, 0);
+  
   selectCategory.setItems(filler, 0);
   selectSubjectA.setItems(filler, 0);
   selectSubjectB.setItems(filler, 0);
-  selectClueType.setItems(clueTypes, 0);
   categsugg.setItems(filler, 0);
   optsugg.setItems(filler, 0);
   
   size(800, 600);
-  
-  gridX1 = 100;
-  gridY1 = 50;
-  gridX2 = 750;
-  gridY2 = 550;
-  
  
-  ////todo: animate steps
-  noLoop();
-  
+  noLoop();  // Start without looping to allow user to enter information
 }
 
-void initialize() {
-  gridWidth = gridX2 - gridX1;
-  gridHeight = gridY2 - gridY1;
+// Initialization done before solving
+void initialize() {  
+  steps = 0;
+  guesses = 0;
+  
+  // Reset cell width/height based on potentially new n and m values
   cellWidth = gridWidth/m;
   cellHeight = gridHeight/n;
   
-  optionsPossible = new int[n][m][m];//bools
+  // Reinitialize all info arrays based on n and m values dictated by user
+  optionsPossible = new int[n][m][m];
   prevOptionsPossible = new int[n][m][m];
   initOptionsPossible = new int[n][m][m];
-  subjectColumns = new int[n][m];//indices
+  subjectColumns = new int[n][m];
   prevSubjectColumns = new int[n][m];
   initSubjectColumns = new int[n][m];
-  subjectNumPossibilities = new int[n][m];//num poss for subj
+  subjectNumPossibilities = new int[n][m];
   prevSubjectNumPossibilities = new int[n][m];
   initSubjectNumPossibilities = new int[n][m];
-  gridNumPossibilities = new int[n][m];//num poss for grid
-  prevGridNumPossibilities = new int[n][m];
-  initGridNumPossibilities = new int[n][m];
+  cellNumPossibilities = new int[n][m];
+  prevCellNumPossibilities = new int[n][m];
+  initCellNumPossibilities = new int[n][m];
   
   for (int i = 0; i < n; i++) {
     for (int j = 0; j < m; j++) {
@@ -145,7 +132,7 @@ void initialize() {
   
   for (int i = 0; i < n; i++) {
     for (int j = 0; j < m; j++) {
-      initGridNumPossibilities[i][j] = m;
+      initCellNumPossibilities[i][j] = m;
     }
   }
   
@@ -156,31 +143,8 @@ void initialize() {
   noLoop();
 }
 
-void printResult() {
-  if (solved) {
-    for (int i = 0; i < n; i++) {
-      print(subjects.get(i).get(0) + "\t\t");
-      for(int j = 0; j < m; j++) {
-        int subjIndex = indexInArray(optionsPossible[i][j], 1) + 1;
-        if (subjIndex >= subjects.get(i).size())
-          print("\t\t");
-        else
-          print(subjects.get(i).get(subjIndex) + "\t\t");
-      }
-      print("\n");
-    }
-    
-    println("Clue checks:", checks);
-    println("Guesses made:", guesses);
-  }
-  
-  else
-    println("Puzzle is unsolvable");
-    
-  loop();
-}
-
 void draw() {
+  // Clues list
   if (showClues) {
     background(0);
     
@@ -196,9 +160,9 @@ void draw() {
     rect(785, scrollBarY1, 15, scrollBarY2 - scrollBarY1);
     strokeWeight(1);
     
-    // Clues
+    // Display all unfinished clues
     fill(255);
-    for (int i = -scrollOffset/clueSpacing; i < numClues; i++) {
+    for (int i = -scrollOffset/clueSpacing; i < numClues - numCluesFinished; i++) {
       Clue cl = initClues.get(i);
       
       cl.display();
@@ -207,19 +171,19 @@ void draw() {
         break;
     }
       
-    return;  // Early return to prevent puzzle grid from being drawn on top of clues
+    return;  // Early return to prevent puzzle grid from being drawn on top of clues, also prevents noLoop() at end so it can keep drawing
   }
   
+  
+  // Solving and showing solution
   if (frameCount != 1) {
-    solve();
-    
     if (solved) {  // Valid solution found
       drawPuzzleGrid();
       
       textAlign(CENTER, CENTER);
       fill(0);
-      for (int i = 0; i < n; i++) {
-        for(int j = 0; j < m; j++) {
+      for (int i = 0; i < n; i++) {  // row
+        for(int j = 0; j < m; j++) {  // column
           int subjIndex = indexInArray(optionsPossible[i][j], 1) + 1;
 
           if (subjIndex >= subjects.get(i).size()) {  // Occurs if user makes dimension-related mistakes (ex: 5 options provided for one category, only 3 provided for another)
@@ -242,7 +206,7 @@ void draw() {
       printResult();  // Print to console
     }
     
-    else {
+    else {  // No valid solution found
       drawPuzzleGrid();
       textAlign(CENTER, CENTER);
       fill(255, 0, 0);
@@ -250,7 +214,7 @@ void draw() {
       text("UNSOLVABLE", width/2, height/2);
     }
     
-    saveSuggestions();
+    saveSuggestions();  // New suggestion data saved after every solve
     resetState();
     saveState();
     
@@ -259,29 +223,53 @@ void draw() {
   }
 }
 
-// todo: add puzzle class
-//todo: if time, add feature for figuring out how many solutions there are
-void keyPressed() {
-  if (keyCode == ENTER)
-    solve();
+// Prints solution to console
+void printResult() {
+  if (solved) {
+    for (int i = 0; i < n; i++) {  // row
+      print(subjects.get(i).get(0) + "\t\t");  // Prints category at start of each row
+      
+      for(int j = 0; j < m; j++) {  // column
+        int subjIndex = indexInArray(optionsPossible[i][j], 1) + 1;
+        if (subjIndex >= subjects.get(i).size())  // Catches same dimension-related errors as in draw()
+          print("\t\t");
+        else
+          print(subjects.get(i).get(subjIndex) + "\t\t");
+      }
+      print("\n");
+    }
+    
+    println("Logical steps taken:", steps);
+    println("Guesses made:", guesses);
+  }
+  
+  else
+    println("Puzzle is unsolvable");
+    
+  loop();
 }
 
+// todo: add puzzle class
+//todo: if time, add feature for figuring out how many solutions there are
+
+// Draws the background grid (without the solution)
 void drawPuzzleGrid() {
   background(0);
   
   strokeWeight(3);
   fill(255);
-  rect(gridX1, gridY1, gridWidth, gridHeight);
+  rect(gridX1, gridY1, gridWidth, gridHeight);  // Background square of the background grid
   
   textAlign(RIGHT, CENTER);
   textSize(20);
   
   for (int i = 0; i < n; i++) {
+    // Horizontal grid lines
     int y = gridY1 + i*cellHeight;
-    
     strokeWeight(1);
     line(gridX1, y, gridX2, y);
     
+    // Category name to left of grid
     textSize(min(20, 20 * (gridX1 - 10)/textWidth(subjects.get(i).get(0))));
     text(subjects.get(i).get(0), gridX1 - 5, y + cellHeight/2);
     
@@ -289,8 +277,8 @@ void drawPuzzleGrid() {
   }
   
   for (int j = 0; j < m; j++) {
+    // Vertical grid lines
     int x = gridX1 + j*cellWidth;
-    
     strokeWeight(3);
     line(x, gridY1, x, gridY2);
   }
@@ -314,25 +302,17 @@ void drawPuzzleGrid() {
 //  }
 //}
 
+// Puzzle solving function
 void solve() {
   while (true) {
-    cluesUsed = false;
-    fill(255);
+    cluesUsed = false;  // Any progress made by any clue sets this to true (if still false by end of while loop, a guess needs to be made)
     
-    for (int i = numCluesFinished; i < numClues; i++) {
-      checks += 1;
-      Clue cl = clues.get(i - numCluesFinished);
+    for (int i = 0; i < numClues - numCluesFinished; i++) {
+      steps += 1;
+      Clue cl = clues.get(i);
       cl.process();
       
       //todo: animate printing out grid state instead
-      String currentClue;
-      if (cl.subjectB[1] == -1)
-        currentClue = subjects.get(cl.subjectA[0]).get(cl.subjectA[1] + 1) + " <" + cl.clueType + "> #" + cl.subjectB[0];
-      else
-        currentClue = subjects.get(cl.subjectA[0]).get(cl.subjectA[1] + 1) + " <" + cl.clueType + "> " + subjects.get(cl.subjectB[0]).get(cl.subjectB[1] + 1);
-      println(currentClue);
-      for (Clue clue : clues)
-        println(clue.subjectA[0], clue.clueType);
       
       if (invalid) {
         revertState();  // Revert to prev state
@@ -341,41 +321,46 @@ void solve() {
       }
     }
     
+    // Milks the puzzle until truly stuck --> stuck() checks for progress opportunities and acts on them
     while (!stuck()) {}
     
+    // Clue checking should only stop if the previous loop didn't see any progress
     if (!cluesUsed)
       break;
   }
   
-  if (arrayTotal(gridNumPossibilities) == n*m) {  // Sum of everything in array of num possibilities for grid
+  // Base Case 1
+  if (arrayTotal(cellNumPossibilities) == n*m) {  // Sum of all integers in array
     solved = true;
     return;
   }
   
-  if (arrayTotal(gridNumPossibilities) < n*m) {
+  // Base Case 2
+  if (arrayTotal(cellNumPossibilities) < n*m) {  // If sum of all possible options is less than minimum valid value of n*m, solution must be invalid
     revertState();  // Revert to prev state
     return;
   }
   
   
-  saveState(); // If invalid, can return to prev state
-  int[] leastOptionsIndices = leastOptionsSquareIndices();  // Find square with least number of possible options >= 2 options
+  saveState(); // Save so that able to return to prev state if guess leads to dead end of invalid solutions
+  
+  int[] leastOptionsIndices = leastOptionsCellIndices();  // Find square with least number of possible options (but still >= 2 options)
   
   int row = leastOptionsIndices[0];
   int col = leastOptionsIndices[1];
+  
   for (int guessIndex = 0; guessIndex < m; guessIndex++) {
     if (optionsPossible[row][col][guessIndex] == 1) {
       guesses += 1;
+      setOption(row, col, guessIndex);  // Set cell at [row][col] to option guessed
       
-      setOption(row, col, guessIndex);
-      solve();
+      solve();  // Recursive call
+      
       if (solved) {
-        println("Solved");
-        return;
+        return;  // Early return if guess leads to valid solution
       }
-        
+      
+      // Keep looping through guesses if no valid solution can be found from prior guesses
     }
   }
 }
-
-Clue clue;
