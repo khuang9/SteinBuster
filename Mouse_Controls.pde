@@ -11,7 +11,7 @@ float listLength() {
 }
 
 void mousePressed() {
-  if (mouseButton == RIGHT) { //<>//
+  if (mouseButton == RIGHT) {
     showClues = !showClues;
     
     if (showClues)
