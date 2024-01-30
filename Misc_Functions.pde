@@ -184,10 +184,10 @@ int indexInArray(String[] arr, String el) {
   
   int elIndex = binarySearch(arr, el, 0, arr.length - 1);
   
-  if (arr[elIndex].equals(el))
-    return elIndex;
-  else
+  if (elIndex == arr.length || !arr[elIndex].equals(el))
     return -1;
+  else
+    return elIndex;
 }
 
 

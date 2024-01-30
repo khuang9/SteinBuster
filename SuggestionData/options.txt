@@ -1,1 +1,1 @@
-blue,jim,monkey,pink,red,tunisian,turkish,white,yellow
+$1,$10,$20,$5,$50,1c,ballet,baseball,basketball,beer,bike,blue,boxing,claude,clouds,dog,eclipse,energy drink,fox,helicopter,hockey,jim,johanne,lion,louis,mary,milk,milkshake,monkey,mouse,night,panda,pink,rabbit,rain,red,sarah,snow,soccer,soda,tank,thunder,train,truck,tunisian,turkish,water,white,william,yellow,zeppelin

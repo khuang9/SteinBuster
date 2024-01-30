@@ -1,1 +1,1 @@
-hat,name,nationality,pet
+drink,hat,name,nationality,net worth,pet,sport,vehicle,weather

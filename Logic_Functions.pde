@@ -3,11 +3,11 @@ void affirmative(Clue cl, int[] subjA, int[] subjB) {  // Clue is fully used up 
   // subj[1] is the subject's assigned index based on order the user enters the subjects
   
   // If one subject's position is known, set the other's column to be the same
-  if (positionKnown(subjA)) {
+  if (positionKnown(subjA)) { //<>//
     setOption(subjB[0], subjectColumns[subjA[0]][subjA[1]], subjB[1]);
     cl.hide();
   }
-  else if (positionKnown(subjB)) {
+  else if (positionKnown(subjB)) { //<>//
     setOption(subjA[0], subjectColumns[subjB[0]][subjB[1]], subjA[1]);
     cl.hide();
   }
@@ -46,26 +46,30 @@ void negative(Clue cl, int[] subjA, int[] subjB) {
   // subj[0] is the row (category) the subject belongs to
   // subj[1] is the subject's assigned index based on order the user enters the subjects
   
-  // If subjects' detemined positions are in the same column, current solution is invalid
+  // If subjects' detemined positions are in the same column, current solution is invalid //<>//
   if (positionKnown(subjA) && positionKnown(subjB) && subjectColumns[subjA[0]][subjA[1]] == subjectColumns[subjB[0]][subjB[1]]) {
     invalid = true;
     return;
   }
   
   // If one known, remove the other as an option in the same column
-  if (positionKnown(subjA))
+  if (positionKnown(subjA)) {
     removeOption(subjB[0], subjectColumns[subjA[0]][subjA[1]], subjB[1]);
-  else if (positionKnown(subjB))
+    cl.hide();
+  }
+  else if (positionKnown(subjB)) {
     removeOption(subjA[0], subjectColumns[subjB[0]][subjB[1]], subjA[1]);
+    cl.hide();
+  }
   
-  cl.hide();  // Clue is fully used no matter what if either subject's position is known
+  // Clue is fully used no matter what if either subject's position is known
 }
 
 void atPosition(Clue cl, int[] subjA, int[] subjB, int type) {  //subjB[0] will be column index indicating position instead of what it usually is (row index based on category)
   // subj[0] is the row (category) the subject belongs to
   // subj[1] is the subject's assigned index based on order the user enters the subjects
   
-  if (type == 0) // not at position
+  if (type == 0) // not at position //<>//
     removeOption(subjA[0], subjB[0], subjA[1]);
     
   else  // at position
@@ -75,7 +79,7 @@ void atPosition(Clue cl, int[] subjA, int[] subjB, int type) {  //subjB[0] will 
 }
 
 void atEitherEnd(Clue cl, int[] subj, int type) {  // Clue fully used up if subject's position is determined for 'at' or no matter what for 'not at'
-  if (type == 0) {  // not at either end
+  if (type == 0) {  // not at either end //<>//
     removeOption(subj[0], 0, subj[1]);  // Remove option from first grid in row
     removeOption(subj[0], m - 1, subj[1]);  // Remove option from last grid in row
     cl.hide();
@@ -105,7 +109,7 @@ void nextTo(Clue cl, int[] subjA, int[] subjB, int type) {  // Clue used up if b
   // If both unknown, and clue is 'next to':
   // For end columns, if second/second last does not have one subject as an option, end columns cannot have the other as an option
   // For all other columns, if both surrounding columns do not have one subject as an option, the indicated column cannot have the other as an option either
-  if (!positionKnown(subjA) && !positionKnown(subjB)) {
+  if (!positionKnown(subjA) && !positionKnown(subjB)) { //<>//
     if (type == 1) {
       for (int c = 0; c < m; c++) {
         if (c == 0 && optionsPossible[subjB[0]][1][subjB[1]] == 0 ||
@@ -199,7 +203,7 @@ void nextTo(Clue cl, int[] subjA, int[] subjB, int type) {  // Clue used up if b
 }
 
 void leftOf(Clue cl, int[] subjA, int[] subjB, int type) {
-  removeOption(subjA[0], m - 1, subjA[1]);  // If A is left of something, it cannot be the rightmost subject
+  removeOption(subjA[0], m - 1, subjA[1]);  // If A is left of something, it cannot be the rightmost subject //<>//
   removeOption(subjB[0], 0, subjB[1]);  // If B is right of something, it cannot be the leftmost subject
   
   // If both subject positions unknown and clue type is 'immediately left of':
@@ -314,9 +318,9 @@ boolean stuck() {
     }
     
     // Check if any subjects have only one possible position
-    for (int subjIndex = 0; subjIndex < n; subjIndex++) {
+    for (int subjIndex = 0; subjIndex < m; subjIndex++) {
       if (subjectNumPossibilities[row][subjIndex] == 1 && subjectColumns[row][subjIndex] == -1) {
-        for (int col = 0; col < n; col++) {
+        for (int col = 0; col < m; col++) {
           if (optionsPossible[row][col][subjIndex] == 1) {
             setOption(row, col, subjIndex);
             return false;

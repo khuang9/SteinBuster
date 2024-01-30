@@ -214,7 +214,6 @@ void draw() {
       text("UNSOLVABLE", width/2, height/2);
     }
     
-    saveSuggestions();  // New suggestion data saved after every solve
     resetState();
     saveState();
     

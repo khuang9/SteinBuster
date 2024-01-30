@@ -1,4 +1,4 @@
-/* ========================================================= //<>//
+/* =========================================================
  * ====                   WARNING                        ===
  * =========================================================
  * The code in this tab has been generated from the GUI form
@@ -182,6 +182,8 @@ public void toggleSolveMode_clicked(GCheckbox source, GEvent event) { //_CODE_:t
 } //_CODE_:toggleSolveMode:598382:
 
 public void solveButton_click(GButton source, GEvent event) { //_CODE_:solveButton:982509:
+  saveSuggestions();  // New suggestion data saved every solve
+
   showClues = false;  // Turn off clues list to show solution
   
   initialize();  // Prepare for solving first
